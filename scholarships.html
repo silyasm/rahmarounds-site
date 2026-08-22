@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scholarships — Rahma Rounds</title>
+<meta name="description" content="Browse and search scholarships for Muslim students pursuing medicine.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Rahma R<span class="moon"></span>unds</a>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="mentorship.html">Mentorship</a>
+      <a href="scholarships.html" class="active">Scholarships</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+
+<section class="section-tight">
+  <div class="section-inner">
+    <p class="eyebrow">Scholarships</p>
+    <h1 class="section-title">Find a scholarship built for your journey</h1>
+    <p class="lede-block">A growing, searchable collection of scholarships for Muslim students in medicine — from pre-med through residency. Search by keyword or filter by tag to find what fits you.</p>
+
+    <div class="scholar-toolbar">
+      <div class="search-wrap">
+        <span class="icon" aria-hidden="true">🔍</span>
+        <input type="text" id="scholar-search" placeholder="Search scholarships by name, org, or keyword…" aria-label="Search scholarships">
+      </div>
+    </div>
+
+    <div class="tag-filters" id="tag-filters" role="group" aria-label="Filter scholarships by tag"></div>
+
+    <p class="results-count" id="results-count"></p>
+
+    <div class="post-grid" id="post-grid"></div>
+
+    <div class="empty-state" id="empty-state">
+      <h3>No scholarships match your search.</h3>
+      <p>Try a different keyword or clear the tag filter.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight center">
+  <div class="section-inner">
+    <h2 class="section-title">Know a scholarship we should list?</h2>
+    <p class="lede-block" style="margin-inline:auto;">If you're a nonprofit team member: add it to <code>scholarship-data.js</code> and it will appear here automatically, searchable and taggable, with no other changes needed.</p>
+    <a href="mailto:rahmarounds@gmail.com" class="btn btn-outline">Suggest a Scholarship</a>
+  </div>
+</section>
+
+<div class="wave-divider">
+  <svg viewBox="0 0 1440 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path style="fill: var(--plum-950)" d="M0,40 C 320,120 500,0 760,40 C 1040,82 1180,10 1440,50 L1440,110 L0,110 Z"></path>
+  </svg>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="index.html" class="logo">Rahma R<span class="moon"></span>unds</a>
+    <div class="footer-contact">
+      <h4>Contact</h4>
+      <p><a href="mailto:rahmarounds@gmail.com">rahmarounds@gmail.com</a></p>
+      <p><a href="https://instagram.com/rahmarounds" target="_blank" rel="noopener">@rahmarounds</a></p>
+      <p><a href="#" target="_blank" rel="noopener">LinkedIn</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script src="scholarship-data.js"></script>
+<script src="scholarship-app.js"></script>
+</body>
+</html>
