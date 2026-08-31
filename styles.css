@@ -633,11 +633,87 @@ p{ margin: 0 0 1em; }
 }
 .empty-state.show{ display: block; }
 
+/* ===================== Resources hub page ===================== */
+.hub-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+  margin-top: 44px;
+}
+.hub-card{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--cream);
+  border: 1px solid rgba(74,41,132,0.15);
+  border-radius: var(--radius-md);
+  padding: 36px 30px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hub-card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 16px 30px rgba(47,22,64,0.14);
+}
+.hub-icon{ font-size: 3rem; line-height: 1; margin-bottom: 6px; }
+.hub-card h3{ font-size: 1.4rem; }
+.hub-card p{ color: var(--ink-soft); font-size: 0.98rem; }
+.hub-link{
+  margin-top: auto;
+  padding-top: 8px;
+  font-weight: 700;
+  color: var(--purple-700);
+}
+
+/* ===================== Crisis callout ===================== */
+.crisis-box{
+  background: var(--plum-950);
+  color: var(--lav-50);
+  border-radius: var(--radius-md);
+  padding: 28px 32px;
+  border-left: 6px solid var(--gold-400);
+}
+.crisis-box h3{ color: var(--gold-300); margin-bottom: 8px; font-size: 1.2rem; }
+.crisis-box p{ margin: 0; color: var(--lav-50); }
+.crisis-box strong{ color: var(--cream); }
+
+/* ===================== Roadmap list ===================== */
+.roadmap-list{
+  margin: 20px 0 0;
+  padding-left: 0;
+  counter-reset: roadmap;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.roadmap-list li{
+  list-style: none;
+  counter-increment: roadmap;
+  position: relative;
+  padding-left: 46px;
+  color: var(--ink-soft);
+}
+.roadmap-list li::before{
+  content: counter(roadmap);
+  position: absolute;
+  left: 0; top: -2px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--purple-700);
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.roadmap-list strong{ color: var(--purple-700); }
+
 /* ===================== Responsive ===================== */
 @media (max-width: 900px){
   .hero-grid, .about-grid, .here-for, .track-grid{ grid-template-columns: 1fr; }
   .feature-grid{ grid-template-columns: 1fr; gap: 44px; }
   .resource-grid{ grid-template-columns: 1fr 1fr; }
+  .hub-grid{ grid-template-columns: 1fr; }
   .socials-grid{ grid-template-columns: 1fr; }
   .steps-grid{ grid-template-columns: 1fr; }
   .post-grid{ grid-template-columns: 1fr; }
