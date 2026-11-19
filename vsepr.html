@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VSEPR Rounds</title>
+<meta name="theme-color" content="#2f1640">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+:root{
+  --bg:#171419;--plum:#2A0B3D;--panel:rgba(79,25,100,.32);--panel2:rgba(42,11,61,.6);--line:rgba(230,175,252,.18);--text:#F6EEFF;--muted:#B9A6CC;
+  --ghost:rgba(237,215,255,.3);--accent:#E9B75F;--good:#9EE6BE;--bad:#F7A8C4;--warn:#F7A8C4;--lp:#E6AFFC;--atom:#F9F3DF;--center:#E9B75F;
+  --gold:#E9B75F;--lav:#E6AFFC;--lilac:#EDD7FF;--cream:#F9F3DF;--night:#5E4B6C;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:radial-gradient(1200px 700px at 20% -10%,#4F1964 0%,#2A0B3D 45%,#171419 100%) fixed;background-color:var(--bg);color:var(--text);
+  font-family:Lora,Georgia,serif;min-height:100vh;line-height:1.45;-webkit-text-size-adjust:100%}
+.wrap{max-width:1060px;margin:0 auto;padding:20px 16px 60px}
+h1,h2,h3{margin:0;line-height:1.15}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hidden{display:none!important}
+.gbtn{background:linear-gradient(135deg,var(--gold),#F0C987);color:var(--plum);border:0;border-radius:12px;padding:11px 18px;font:800 15px Fraunces,Georgia,serif;letter-spacing:.02em;transition:transform .1s,filter .15s}
+.gbtn:hover{filter:brightness(1.07)}.gbtn:active{transform:scale(.97)}
+.gbtn.ghostbtn{background:rgba(230,175,252,.1);color:var(--lilac);border:1px solid var(--line)}
+.gbtn.small{padding:8px 13px;font-size:13px;border-radius:10px}
+.chip{display:inline-block;background:var(--gold);color:var(--plum);font:800 11px/1 Fraunces,Georgia,serif;letter-spacing:.14em;padding:6px 10px;border-radius:6px;text-transform:uppercase}
+.hublink{display:inline-block;margin-top:12px;color:var(--muted);font-size:13px;text-decoration:none;border-bottom:1px dashed var(--line)}
+
+/* ---------- HOME ---------- */
+.ghero{text-align:center;padding:18px 0 14px}
+.ghero h1{font:900 clamp(38px,6vw,62px)/1 Fraunces,Georgia,serif;margin:12px 0 4px;letter-spacing:-.01em;background:linear-gradient(90deg,var(--gold) 0%,#F3CFA0 30%,var(--lav) 70%,#C58BFF 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ghero p{color:var(--muted);margin:10px auto 0;max-width:560px}
+.legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:14px;font-size:13px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:22px}
+.mode{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;position:relative;overflow:hidden}
+.mode::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--gold),var(--lav))}
+.mode h3{font:800 22px/1.1 Fraunces,Georgia,serif;display:flex;align-items:center;gap:10px;margin-top:8px}
+.mode .tag{font:800 11px Fraunces,Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:var(--lav)}
+.mode p{color:var(--muted);font-size:13.5px;margin:8px 0 14px}
+.phase-list{display:flex;flex-direction:column;gap:8px}
+.phase-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:11px 14px;text-align:left;transition:border-color .15s,transform .1s}
+.phase-btn:hover{border-color:var(--gold)}.phase-btn:active{transform:scale(.99)}
+.phase-btn b{display:block;font-size:14.5px;font-weight:600}
+.phase-btn small{color:var(--muted);font-size:12.5px}
+.best{font-size:12px;color:var(--gold);white-space:nowrap}
+.num{width:30px;height:30px;border-radius:9px;background:rgba(230,175,252,.12);border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font:800 14px Fraunces,Georgia,serif;flex:none;color:var(--gold)}
+
+/* ---------- PLAY ---------- */
+.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.topbar .title{font:800 18px Fraunces,Georgia,serif;flex:1;min-width:150px}
+.topbar .title small{display:block;color:var(--muted);font:400 12.5px Lora,Georgia,serif}
+.pill{background:rgba(230,175,252,.1);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+.bar{height:6px;background:rgba(230,175,252,.1);border-radius:6px;overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--lav));width:0;transition:width .3s}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px;
+  transition:transform .26s ease,opacity .26s ease;transform:perspective(1400px) rotateY(0)}
+.card.flip-out{transform:perspective(1400px) rotateY(88deg);opacity:.2}
+.card.flip-in{transform:perspective(1400px) rotateY(-88deg);opacity:.2;transition:none}
+.stage{position:relative;background:radial-gradient(circle at 50% 45%,#3a1752,#1d0c29 75%);border:1px solid var(--line);border-radius:16px;min-height:300px;overflow:hidden}
+.stage canvas{width:100%;height:300px;display:block;touch-action:none;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.stage .drag-tip{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:11.5px;color:var(--muted);pointer-events:none}
+.vtag{position:absolute;top:10px;left:10px;background:var(--gold);color:var(--plum);font:800 11px Fraunces,Georgia,serif;letter-spacing:.1em;padding:5px 8px;border-radius:6px;text-transform:uppercase}
+.mystery{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#1d0c29;color:var(--muted);font-size:13px;text-align:center;padding:16px}
+.mystery b{font:900 70px Fraunces,Georgia,serif;color:rgba(230,175,252,.25);line-height:1}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.clues{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.clue{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center}
+.clue .v{font:900 36px/1.1 Fraunces,Georgia,serif}
+.clue .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.clue.eg .v{color:var(--text)}.clue.ba .v{color:var(--cream)}.clue.lp .v{color:var(--lp)}
+.namechip{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+.namechip .k{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.namechip .v{font:900 clamp(28px,4.5vw,38px) Fraunces,Georgia,serif;margin-top:2px;color:var(--gold)}
+.namechip .h{font-size:13px;color:var(--lav);margin-top:4px}
+.prompt{font-size:14.5px;color:var(--muted)}
+.prompt b{color:var(--text)}
+.typebox{position:relative;background:rgba(23,20,25,.55);border:1px solid var(--line);border-radius:14px;padding:18px 10px;cursor:text;min-height:84px;display:flex;align-items:center;justify-content:center}
+.typebox.focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(233,183,95,.14)}
+.typebox:not(.focus):not(.finished)::after{content:"tap here to type";position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);pointer-events:none}
+.slots{display:flex;flex-wrap:wrap;justify-content:center;row-gap:10px;font:800 clamp(22px,4.2vw,32px)/1.2 Fraunces,Georgia,serif}
+.word{display:inline-flex;gap:3px;white-space:nowrap}
+.gap{width:.6em}
+.slot{min-width:.7em;text-align:center;border-bottom:3px solid rgba(230,175,252,.22);color:var(--ghost);padding:0 1px;transition:color .1s}
+.slot.done{color:var(--gold);border-bottom-color:rgba(233,183,95,.5)}
+.slot.fixed{border-bottom-color:transparent}
+.slot.blank{color:transparent}
+.slot.hint{color:var(--warn)}
+.slot.cur{border-bottom-color:var(--lav);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{border-bottom-color:transparent}}
+.ghostin{position:absolute;opacity:0;left:0;top:0;width:100%;height:100%;font-size:16px;border:0;padding:0;cursor:text}
+.shake{animation:shake .32s}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.txt{width:100%;background:rgba(23,20,25,.55);border:1px solid var(--line);border-radius:12px;padding:13px 14px;color:var(--text);font:600 18px Lora,Georgia,serif;outline:none}
+.txt:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(233,183,95,.14)}
+.txt:disabled{opacity:.7}
+.row{display:flex;gap:10px;align-items:stretch}
+.row .txt{flex:1;min-width:0}
+.vergroup{margin-bottom:10px}
+.vergroup .vlabel{font:800 12px Fraunces,Georgia,serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.numrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.numrow label{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
+.numrow .txt{font:900 28px Fraunces,Georgia,serif;text-align:center}
+.numrow .ba .txt{color:var(--cream)}.numrow .lp .txt{color:var(--lp)}
+.numrow .txt.ok{border-color:#5FCB8E}.numrow .txt.no{border-color:#E46A97}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 10px;font-weight:600;font-size:16px;text-align:center}
+.choice:hover{border-color:var(--gold)}
+.choice.right{border-color:#5FCB8E;background:rgba(158,230,190,.14);color:var(--good)}
+.choice.wrong{border-color:#E46A97;background:rgba(247,168,196,.12);color:var(--bad)}
+.choice kbd{font-size:11px;color:var(--muted);margin-right:6px;font-family:inherit}
+.feedback{min-height:24px;font-weight:600;font-size:15px}
+.feedback.good{color:var(--good)}.feedback.bad{color:var(--bad)}.feedback.info{color:var(--muted);font-weight:500}
+.feedback .ans{display:block;font:800 22px Fraunces,Georgia,serif;color:var(--gold);margin-top:2px}
+.reveal{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13.5px;display:grid;grid-template-columns:auto 1fr;gap:4px 14px}
+.reveal .k{color:var(--muted)}
+.reveal .v{font-weight:600}
+.nextrow{display:flex;justify-content:flex-end;align-items:center;gap:10px}
+.nextrow small{color:var(--muted);font-size:12px}
+.timer{height:3px;background:rgba(230,175,252,.12);border-radius:3px;overflow:hidden;flex:1}
+.timer i{display:block;height:100%;background:var(--gold);width:100%}
+
+/* ---------- RESULTS ---------- */
+.results{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:28px 20px;text-align:center}
+.bigscore{font:900 76px/1 Fraunces,Georgia,serif;margin:12px 0 4px;background:linear-gradient(90deg,var(--gold),var(--lav));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stars{font-size:32px;letter-spacing:6px;margin:6px 0}
+.misslist{text-align:left;max-width:600px;margin:18px auto 0;display:flex;flex-direction:column;gap:8px}
+.miss{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.miss b{color:var(--gold)}
+.miss span{color:var(--muted)}
+.resbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+
+/* ---------- LEARN ---------- */
+.learn h2{font:900 30px Fraunces,Georgia,serif;margin:6px 0 4px}
+.lesson{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin:16px 0 26px}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+.step h3{font:800 17px Fraunces,Georgia,serif;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.step p,.step li{color:#e1d3ee;font-size:14px;margin:0}
+.step ul{margin:6px 0 0;padding-left:18px}
+.step .eg{margin-top:8px;font-size:13px;background:var(--panel2);border-radius:10px;padding:8px 10px;color:var(--text)}
+.fam{margin:20px 0 8px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.fam h3{font:800 19px Fraunces,Georgia,serif}
+.fam small{color:var(--muted)}
+.gallery{display:flex;gap:10px;align-items:center;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.arrow{color:var(--muted);font-size:12px;flex:none;text-align:center}
+.arrow b{display:block;color:var(--lav);font-size:18px}
+.mini{flex:none;width:170px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px;text-align:center;transition:border-color .15s}
+.mini:hover{border-color:var(--gold)}
+.mini canvas{width:100%;height:125px;display:block}
+.mini b{display:block;font:800 15px Fraunces,Georgia,serif;margin-top:2px}
+.mini small{display:block;color:var(--muted);font-size:12px}
+.modal{position:fixed;inset:0;background:rgba(10,4,16,.78);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal .box{background:var(--plum);border:1px solid var(--line);border-radius:20px;padding:16px;width:min(560px,100%);max-height:94vh;overflow:auto}
+.modal canvas{width:100%;height:320px;display:block;touch-action:none;background:radial-gradient(circle at 50% 45%,#3a1752,#1d0c29 75%);border-radius:14px}
+.modal h2{font:900 26px Fraunces,Georgia,serif;margin:12px 0 8px}
+
+/* ---------- PHONE ---------- */
+@media (max-width:760px){
+  .card{grid-template-columns:1fr;padding:12px;gap:12px;border-radius:18px}
+  .stage{min-height:230px}.stage canvas{height:230px}
+  .clue .v{font-size:30px}.clue .k{font-size:10px}
+  .bigscore{font-size:60px}
+  .topbar .title{order:-1;flex-basis:100%}
+  .modal canvas{height:260px}
+}
+@media (max-width:420px){
+  .wrap{padding:14px 12px 50px}
+  .choices{grid-template-columns:1fr}
+  .mini{width:148px}
+}
+</style>
+<link rel="stylesheet" href="game-theme.css">
+</head>
+<body class="vsepr">
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo-link" aria-label="Rahma Rounds — home">
+      <img src="logo.png" alt="Rahma Rounds" class="logo-img" style="display:none;"
+           onload="this.style.display='inline-block'; this.nextElementSibling.style.display='none';"
+           onerror="this.style.display='none';">
+      <span class="logo">Rahma R<span class="moon"></span>unds</span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="mentorship.html">Mentorship</a>
+      <a href="scholarships.html">Scholarships</a>
+      <a href="resources.html" class="active">Resources</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+<div class="wrap">
+
+<!-- HOME -->
+<section id="home">
+  <div class="ghero">
+    <span class="chip">Rahma Rounds</span>
+    <h1>VSEPR Rounds</h1>
+    <p>Learn all 13 molecular shapes in three steps: trace it, fill in the gaps, then do it on your own.</p>
+    <a class="hublink" href="games.html">← All study games</a>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--center)"></i>Central atom</span>
+      <span><i class="dot" style="background:var(--atom)"></i>Bonding atom</span>
+      <span><i class="dot" style="background:var(--lp)"></i>Lone pair</span>
+    </div>
+  </div>
+  <div class="modes">
+    <div class="mode">
+      <span class="tag">Start here</span>
+      <h3>📘 Learn VSEPR</h3>
+      <p>Short lesson on how VSEPR works, plus 3D models of every shape you can spin around.</p>
+      <div class="phase-list"><button class="phase-btn" data-go="learn"><span><b>Open the lesson</b><small>About 5 minutes</small></span><span class="num">→</span></button></div>
+    </div>
+    <div class="mode">
+      <span class="tag">Game 1</span>
+      <h3>🔷 Name the Shape</h3>
+      <p>You get electron groups, bonding atoms and lone pairs. You type the molecular shape.</p>
+      <div class="phase-list">
+        <button class="phase-btn" data-start="name:1"><span class="num">1</span><span style="flex:1"><b>Phase 1 · Trace</b><small>Type over the gray letters</small></span><span class="best" data-best="name1"></span></button>
+        <button class="phase-btn" data-start="name:2"><span class="num">2</span><span style="flex:1"><b>Phase 2 · Fill the gaps</b><small>Some letters are missing</small></span><span class="best" data-best="name2"></span></button>
+        <button class="phase-btn" data-start="name:3"><span class="num">3</span><span style="flex:1"><b>Phase 3 · Solo</b><small>No hints, no model until you answer</small></span><span class="best" data-best="name3"></span></button>
+      </div>
+    </div>
+    <div class="mode">
+      <span class="tag">Game 2</span>
+      <h3>🔢 Count It</h3>
+      <p>Now flip it around. You get the shape name and type the number of bonding atoms and lone pairs. Bent and Linear each have 2 versions, so you enter both.</p>
+      <div class="phase-list"><button class="phase-btn" data-start="count:0"><span style="flex:1"><b>Play Count It</b><small>11 shape names</small></span><span class="best" data-best="count0"></span></button></div>
+    </div>
+    <div class="mode">
+      <span class="tag">Bonus</span>
+      <h3>📐 Bond Angles</h3>
+      <p>Extra credit. Pick the right bond angle for each shape. Press 1 to 4 on your keyboard.</p>
+      <div class="phase-list"><button class="phase-btn" data-start="angle:0"><span style="flex:1"><b>Play Bond Angles</b><small>13 shapes, multiple choice</small></span><span class="best" data-best="angle0"></span></button></div>
+    </div>
+  </div>
+</section>
+
+<!-- LEARN -->
+<section id="learn" class="learn hidden">
+  <div class="topbar"><button class="gbtn ghostbtn small" data-go="home">← Home</button><div class="title">Learn VSEPR</div></div>
+  <h2>How VSEPR works</h2>
+  <p style="color:var(--muted);margin:0">VSEPR stands for Valence Shell Electron Pair Repulsion. Electrons push each other away, so everything around the central atom spreads out as far as it can. That spreading decides the shape.</p>
+  <div class="lesson">
+    <div class="step"><h3><span class="num">1</span>Find the central atom</h3><p>Usually the least electronegative atom, and never hydrogen. Draw the Lewis structure so you can see its bonds and lone pairs.</p></div>
+    <div class="step"><h3><span class="num">2</span>Count electron groups</h3>
+      <ul><li>Each <b style="color:var(--atom)">bonded atom</b> = 1 group</li><li>Each <b style="color:var(--lp)">lone pair on the central atom</b> = 1 group</li><li>Single, double and triple bonds all count as just 1 group</li></ul>
+      <div class="eg">CO₂ has two double bonds and no lone pairs on C → 2 groups → linear</div></div>
+    <div class="step"><h3><span class="num">3</span>Groups give the electron geometry</h3>
+      <ul><li>2 → linear</li><li>3 → trigonal planar</li><li>4 → tetrahedral</li><li>5 → trigonal bipyramidal</li><li>6 → octahedral</li></ul></div>
+    <div class="step"><h3><span class="num">4</span>Atoms give the molecular shape</h3><p>Lone pairs still take up space, but you can't "see" them in the shape name. The molecular shape only describes where the atoms are.</p>
+      <div class="eg">H₂O: 2 atoms + 2 lone pairs = 4 groups. Electron geometry is tetrahedral, but the shape is <b>bent</b>.</div></div>
+    <div class="step"><h3><span class="num">5</span>Lone pairs push harder</h3><p>Lone pairs are fatter than bonds, so they squeeze the bond angles smaller. Repulsion order: lone pair–lone pair &gt; lone pair–bond &gt; bond–bond.</p>
+      <div class="eg">CH₄ 109.5° → NH₃ ~107° → H₂O ~104.5°</div></div>
+    <div class="step"><h3><span class="num">6</span>Where lone pairs sit</h3>
+      <ul><li><b>5 groups:</b> lone pairs go in the <b>equatorial</b> spots (the flat triangle in the middle), where there's more room</li><li><b>6 groups:</b> the 2nd lone pair goes <b>opposite</b> the first, which is why you get square planar</li></ul></div>
+    <div class="step"><h3><span class="num">7</span>AXE shorthand</h3><p><b>A</b> = central atom, <b>X</b> = bonded atoms, <b>E</b> = lone pairs.</p><div class="eg">NH₃ = AX₃E · H₂O = AX₂E₂ · XeF₄ = AX₄E₂</div></div>
+    <div class="step"><h3><span class="num">8</span>The big trick</h3><p>Learn the 5 "parent" shapes. To get the others, swap one atom for a lone pair at a time. Each row below is one family.</p></div>
+  </div>
+  <h2>All 13 shapes</h2>
+  <p style="color:var(--muted);margin:0">Tap any model to make it bigger. Drag to spin it.</p>
+  <div id="families"></div>
+  <div style="text-align:center;margin-top:28px"><button class="gbtn" data-start="name:1">Ready? Start Phase 1 →</button></div>
+</section>
+
+<!-- PLAY -->
+<section id="play" class="hidden">
+  <div class="topbar">
+    <button class="gbtn ghostbtn small" data-go="home">← Quit</button>
+    <div class="title" id="playTitle"></div>
+    <span class="pill" id="prog"></span>
+    <span class="pill" id="scoreNow" style="color:var(--good)"></span>
+  </div>
+  <div class="bar"><i id="barFill"></i></div>
+  <div class="card" id="card">
+    <div class="stage" id="stage">
+      <canvas id="mainCanvas"></canvas>
+      <div class="drag-tip">drag to spin</div>
+      <div class="vtag hidden" id="vtag"></div>
+      <div class="mystery hidden" id="mystery"><b>?</b>The model shows up after you answer</div>
+    </div>
+    <div class="side">
+      <div id="clueArea"></div>
+      <div class="prompt" id="prompt"></div>
+      <div id="answerArea"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="reveal hidden" id="reveal"></div>
+      <div class="nextrow hidden" id="nextRow"><div class="timer"><i id="timerFill"></i></div><small>or press Enter</small><button class="gbtn" id="nextBtn">Next →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results" class="hidden"><div class="results" id="resultsBox"></div></section>
+
+</div>
+
+<div class="wave-divider">
+  <svg viewBox="0 0 1440 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path style="fill: var(--plum-950)" d="M0,40 C 320,120 500,0 760,40 C 1040,82 1180,10 1440,50 L1440,110 L0,110 Z"></path>
+  </svg>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="index.html" class="logo-link" aria-label="Rahma Rounds — home">
+      <img src="logo.png" alt="Rahma Rounds" class="logo-img" style="display:none;"
+           onload="this.style.display='inline-block'; this.nextElementSibling.style.display='none';"
+           onerror="this.style.display='none';">
+      <span class="logo">Rahma R<span class="moon"></span>unds</span>
+    </a>
+    <div class="footer-contact">
+      <h4>Contact</h4>
+      <p><a href="mailto:rahmarounds@gmail.com">rahmarounds@gmail.com</a></p>
+      <p><a href="https://instagram.com/rahmarounds" target="_blank" rel="noopener">@rahmarounds</a></p>
+      <p><a href="https://www.linkedin.com/company/rahma-rounds" target="_blank" rel="noopener">LinkedIn</a></p>
+    </div>
+  </div>
+</footer>
+
+<div class="modal hidden" id="modal"><div class="box">
+  <canvas id="modalCanvas"></canvas>
+  <h2 id="modalName"></h2>
+  <div class="reveal" id="modalInfo"></div>
+  <div style="text-align:right;margin-top:12px"><button class="gbtn ghostbtn" id="modalClose">Close</button></div>
+</div></div>
+
+<script src="script.js"></script>
+<script>
+/* ================= DATA ================= */
+const nv=v=>{const l=Math.hypot(v[0],v[1],v[2])||1;return [v[0]/l,v[1]/l,v[2]/l]};
+const TP=[[0,1,0],[0.866,-0.5,0],[-0.866,-0.5,0]];
+const TET=[[0,1,0],[0,-1/3,0.9428],[-0.8165,-1/3,-0.4714],[0.8165,-1/3,-0.4714]];
+const qa=0.8165,qb=0.5774;
+const EQ=[[1,0,0],[-0.5,0,0.866],[-0.5,0,-0.866]], AXL=[[0,1,0],[0,-1,0]];
+const OCT=[[1,0,0],[-1,0,0],[0,0,1],[0,0,-1],[0,1,0],[0,-1,0]];
+const SHAPES=[
+ {eg:2,ba:2,lp:0,name:"Linear",angle:"180°",ex:"CO₂",A:[[1,0,0],[-1,0,0]],E:[]},
+ {eg:3,ba:3,lp:0,name:"Trigonal planar",angle:"120°",ex:"BF₃",A:TP,E:[]},
+ {eg:3,ba:2,lp:1,name:"Bent",angle:"<120°",ex:"SO₂",A:TP.slice(1),E:[TP[0]]},
+ {eg:4,ba:4,lp:0,name:"Tetrahedral",angle:"109.5°",ex:"CH₄",A:TET,E:[]},
+ {eg:4,ba:3,lp:1,name:"Trigonal pyramidal",angle:"~107°",ex:"NH₃",A:TET.slice(1),E:[TET[0]]},
+ {eg:4,ba:2,lp:2,name:"Bent",angle:"~104.5°",ex:"H₂O",A:[[0,-qb,qa],[0,-qb,-qa]],E:[[qa,qb,0],[-qa,qb,0]]},
+ {eg:5,ba:5,lp:0,name:"Trigonal bipyramidal",angle:"90°, 120°, 180°",ex:"PCl₅",A:[...AXL,...EQ],E:[]},
+ {eg:5,ba:4,lp:1,name:"Seesaw",angle:"<90°, <120°, ~180°",ex:"SF₄",A:[...AXL,EQ[1],EQ[2]],E:[EQ[0]]},
+ {eg:5,ba:3,lp:2,name:"T-shaped",angle:"~90°, 180°",ex:"ClF₃",A:[...AXL,EQ[0]],E:[EQ[1],EQ[2]]},
+ {eg:5,ba:2,lp:3,name:"Linear",angle:"180°",ex:"XeF₂",A:AXL,E:EQ},
+ {eg:6,ba:6,lp:0,name:"Octahedral",angle:"90°, 180°",ex:"SF₆",A:OCT,E:[]},
+ {eg:6,ba:5,lp:1,name:"Square pyramidal",angle:"~90°, 180°",ex:"BrF₅",A:OCT.slice(0,5),E:[OCT[5]]},
+ {eg:6,ba:4,lp:2,name:"Square planar",angle:"90°, 180°",ex:"XeF₄",A:OCT.slice(0,4),E:[OCT[4],OCT[5]]},
+];
+const EGEO={2:"Linear",3:"Trigonal planar",4:"Tetrahedral",5:"Trigonal bipyramidal",6:"Octahedral"};
+const SUB="₀₁₂₃₄₅₆₇₈₉";
+const sub=n=>n>1?String(n).split('').map(d=>SUB[d]).join(''):'';
+const axe=s=>"AX"+sub(s.ba)+(s.lp?"E"+sub(s.lp):"");
+const AMBIG=new Set(["Bent","Linear"]);
+
+/* ================= 3D VIEWER ================= */
+const viewers=new Set();
+class Viewer{
+  constructor(canvas,shape,opt={}){
+    this.c=canvas;this.ctx=canvas.getContext('2d');
+    this.yaw=opt.yaw??0.5;this.pitch=0.38;this.spin=opt.spin??0.007;this.drag=false;
+    this.setShape(shape);
+    if(opt.interactive!==false) this.bind();
+    viewers.add(this);
+  }
+  setShape(s){
+    this.s=s;if(!s){this.A=[];this.E=[];return}
+    const sum=[0,0,0];s.E.forEach(e=>{sum[0]+=e[0];sum[1]+=e[1];sum[2]+=e[2]});
+    const k=0.17;
+    this.A=s.A.map(d=>nv([d[0]-k*sum[0],d[1]-k*sum[1],d[2]-k*sum[2]]));
+    this.E=s.E.map(nv);
+  }
+  bind(){
+    let lx=0,ly=0;
+    this.c.addEventListener('pointerdown',e=>{this.drag=true;lx=e.clientX;ly=e.clientY;try{this.c.setPointerCapture(e.pointerId)}catch(_){}});
+    this.c.addEventListener('pointermove',e=>{if(!this.drag)return;this.yaw+=(e.clientX-lx)*0.012;this.pitch=Math.max(-1.4,Math.min(1.4,this.pitch+(e.clientY-ly)*0.012));lx=e.clientX;ly=e.clientY});
+    const up=()=>{this.drag=false};
+    this.c.addEventListener('pointerup',up);this.c.addEventListener('pointercancel',up);
+  }
+  resize(){
+    const r=this.c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+    const w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);
+    if(this.c.width!==w||this.c.height!==h){this.c.width=w;this.c.height=h}
+    this.w=w;this.h=h;
+  }
+  draw(){
+    const c=this.ctx,W=this.w,H=this.h;c.clearRect(0,0,W,H);
+    if(!this.s||!W||!H)return;
+    const m=Math.min(W,H),L=m*0.34,R=m*0.072,cx=W/2,cy=H/2;
+    const cyw=Math.cos(this.yaw),syw=Math.sin(this.yaw),cp=Math.cos(this.pitch),sp=Math.sin(this.pitch);
+    const rot=v=>{const x=v[0]*cyw+v[2]*syw,z0=-v[0]*syw+v[2]*cyw,y=v[1];return [x,y*cp-z0*sp,y*sp+z0*cp]};
+    const P=(v,len)=>{const r=rot(v),s=1+r[2]*0.13;return {x:cx+r[0]*len*s,y:cy-r[1]*len*s,z:r[2],s}};
+    const sphere=(x,y,r,kind)=>{
+      const g=c.createRadialGradient(x-r*.35,y-r*.38,r*.08,x,y,r);
+      if(kind==='center'){g.addColorStop(0,'#fff3d6');g.addColorStop(.45,'#E9B75F');g.addColorStop(1,'#7a4c12')}
+      else{g.addColorStop(0,'#ffffff');g.addColorStop(.45,'#F3E7C8');g.addColorStop(1,'#8a7656')}
+      c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fillStyle=g;c.fill();
+    };
+    const bond=p=>{
+      c.lineCap='round';
+      c.strokeStyle='#5E4B6C';c.lineWidth=R*0.46;c.beginPath();c.moveTo(cx,cy);c.lineTo(p.x,p.y);c.stroke();
+      c.strokeStyle='#a892bd';c.lineWidth=R*0.15;c.beginPath();c.moveTo(cx,cy);c.lineTo(p.x,p.y);c.stroke();
+    };
+    const lobe=d=>{
+      const tip=P(d,L*0.8),dx=tip.x-cx,dy=tip.y-cy,len=Math.hypot(dx,dy),ang=Math.atan2(dy,dx);
+      const rx=Math.max(len*0.52,L*0.21),ry=L*0.21*tip.s;
+      c.save();c.translate(cx+dx*0.56,cy+dy*0.56);c.rotate(ang);
+      const g=c.createRadialGradient(rx*0.2,0,1,0,0,Math.max(rx,ry));
+      g.addColorStop(0,'rgba(230,175,252,0.6)');g.addColorStop(1,'rgba(180,110,230,0.18)');
+      c.beginPath();c.ellipse(0,0,rx,ry,0,0,Math.PI*2);c.fillStyle=g;c.fill();
+      c.lineWidth=Math.max(1,m*0.004);c.strokeStyle='rgba(237,215,255,0.7)';c.stroke();
+      c.fillStyle='#ffffff';
+      [-1,1].forEach(sg=>{c.beginPath();c.arc(rx*0.3,sg*ry*0.36,R*0.17,0,Math.PI*2);c.fill()});
+      c.restore();
+    };
+    const items=[];
+    this.A.forEach(d=>items.push({t:'a',d,z:rot(d)[2]}));
+    this.E.forEach(d=>items.push({t:'e',d,z:rot(d)[2]}));
+    items.sort((p,q)=>p.z-q.z);
+    const drawItem=it=>{if(it.t==='a'){const p=P(it.d,L);bond(p);sphere(p.x,p.y,R*p.s,'atom')}else lobe(it.d)};
+    items.filter(i=>i.z<0).forEach(drawItem);
+    sphere(cx,cy,R*1.3,'center');
+    items.filter(i=>i.z>=0).forEach(drawItem);
+  }
+}
+(function loop(){
+  for(const v of viewers){
+    if(!v.c.isConnected){viewers.delete(v);continue}
+    if(v.c.offsetParent===null)continue;
+    if(!v.drag)v.yaw+=v.spin;
+    v.resize();v.draw();
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* ================= HELPERS ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const normTxt=x=>x.toLowerCase().replace(/[^a-z]/g,'');
+function loadBest(){try{return JSON.parse(localStorage.getItem('vsepr-best')||'{}')}catch(_){return {}}}
+function saveBest(key,val){try{const b=loadBest();if(!(key in b)||val>b[key]){b[key]=val;localStorage.setItem('vsepr-best',JSON.stringify(b))}}catch(_){}}
+function show(id){['home','learn','play','results'].forEach(x=>$('#'+x).classList.toggle('hidden',x!==id));window.scrollTo(0,0);if(id==='home')paintBest()}
+function paintBest(){const b=loadBest();document.querySelectorAll('[data-best]').forEach(el=>{const v=b[el.dataset.best];el.textContent=v!=null?`Best ${v}/${el.dataset.best==='count0'?11:13}`:''})}
+function infoHTML(s){
+  return `<span class="k">Shape</span><span class="v">${s.name}</span>
+  <span class="k">Electron geometry</span><span class="v">${EGEO[s.eg]}</span>
+  <span class="k">Groups</span><span class="v">${s.eg} = <span style="color:var(--atom)">${s.ba} atoms</span> + <span style="color:var(--lp)">${s.lp} lone pair${s.lp===1?'':'s'}</span></span>
+  <span class="k">AXE</span><span class="v">${axe(s)}</span>
+  <span class="k">Bond angle</span><span class="v">${s.angle}</span>
+  <span class="k">Example</span><span class="v">${s.ex}</span>`;
+}
+
+/* ================= LEARN PAGE ================= */
+const FAMILIES=[
+  {eg:2,idx:[0]},{eg:3,idx:[1,2]},{eg:4,idx:[3,4,5]},{eg:5,idx:[6,7,8,9]},{eg:6,idx:[10,11,12]}
+];
+let modalViewer=null;
+function buildLearn(){
+  const box=$('#families');
+  FAMILIES.forEach(f=>{
+    const head=document.createElement('div');head.className='fam';
+    head.innerHTML=`<h3>${f.eg} electron groups</h3><small>parent: ${EGEO[f.eg]}</small>`;
+    box.appendChild(head);
+    const row=document.createElement('div');row.className='gallery';
+    f.idx.forEach((si,k)=>{
+      const s=SHAPES[si];
+      if(k>0){const ar=document.createElement('div');ar.className='arrow';ar.innerHTML='<b>→</b>swap 1 atom<br>for a lone pair';row.appendChild(ar)}
+      const card=document.createElement('button');card.className='mini';
+      card.innerHTML=`<canvas></canvas><b>${s.name}</b><small>${s.ba} atoms · ${s.lp} LP · ${s.angle}</small><small>${s.ex}</small>`;
+      row.appendChild(card);
+      new Viewer(card.querySelector('canvas'),s,{interactive:false,yaw:Math.random()*6,spin:0.006});
+      card.addEventListener('click',()=>openModal(s));
+    });
+    box.appendChild(row);
+  });
+}
+function openModal(s){
+  $('#modal').classList.remove('hidden');
+  if(!modalViewer)modalViewer=new Viewer($('#modalCanvas'),s);else modalViewer.setShape(s);
+  $('#modalName').textContent=s.name;
+  $('#modalInfo').innerHTML=infoHTML(s);
+}
+$('#modalClose').onclick=()=>$('#modal').classList.add('hidden');
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')$('#modal').classList.add('hidden')});
+
+/* ================= GAME ================= */
+const mainViewer=new Viewer($('#mainCanvas'),null);
+let G=null;
+const TITLES={name1:["Name the Shape","Phase 1 · Trace the gray letters"],name2:["Name the Shape","Phase 2 · Fill in the missing letters"],name3:["Name the Shape","Phase 3 · Solo, no hints"],count0:["Count It","Type bonding atoms and lone pairs"],angle0:["Bond Angles","Bonus round"]};
+
+function startRound(mode,phase){
+  if(G){clearTimeout(G.timer);stopCycle()}
+  const pool=mode==='count'?SHAPES.filter((s,i)=>SHAPES.findIndex(x=>x.name===s.name)===i):SHAPES.slice();
+  G={mode,phase:+phase,key:mode+phase,deck:shuffle(pool),i:0,score:0,misses:[],timer:null,flipping:false};
+  const t=TITLES[G.key];$('#playTitle').innerHTML=`${t[0]}<small>${t[1]}</small>`;
+  show('play');renderQ();
+}
+
+function setModel(s,visible){
+  mainViewer.setShape(s);
+  $('#mystery').classList.toggle('hidden',visible);
+}
+function fb(html,cls){const f=$('#feedback');f.className='feedback '+(cls||'');f.innerHTML=html}
+
+function renderQ(){
+  const s=G.deck[G.i];
+  stopCycle();
+  Object.assign(G,{s,vars:null,mist:0,slotMiss:0,done:false,pos:0,hidden:new Set(),hintShown:new Set()});
+  clearTimeout(G.timer);
+  $('#prog').textContent=`${G.i+1} / ${G.deck.length}`;
+  $('#scoreNow').textContent=`✓ ${G.score}`;
+  $('#barFill').style.width=(G.i/G.deck.length*100)+'%';
+  $('#reveal').classList.add('hidden');$('#nextRow').classList.add('hidden');
+  fb('','');
+  const clue=$('#clueArea'),ans=$('#answerArea'),pr=$('#prompt');
+
+  if(G.mode==='name'){
+    clue.innerHTML=`<div class="clues">
+      <div class="clue eg"><div class="v">${s.eg}</div><div class="k">Electron groups</div></div>
+      <div class="clue ba"><div class="v">${s.ba}</div><div class="k">Bonding atoms</div></div>
+      <div class="clue lp"><div class="v">${s.lp}</div><div class="k">Lone pairs</div></div></div>`;
+    setModel(s,G.phase<3);
+    if(G.phase<3){
+      pr.innerHTML=G.phase===1?'Look at the model, then <b>type the gray letters</b>.':'Type the <b>whole name</b>. Some letters are hidden. Two misses on a letter shows it in yellow.';
+      G.chars=[...s.name];
+      if(G.phase===2){
+        const li=G.chars.map((ch,i)=>/[a-z]/i.test(ch)?i:-1).filter(i=>i>=0);
+        G.hidden=new Set(shuffle(li.slice()).slice(0,Math.max(1,Math.round(li.length*0.5))));
+      }
+      ans.innerHTML=`<div class="typebox" id="typebox"><div class="slots" id="slots"></div>
+        <input id="ghost" class="ghostin" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Type the shape name"></div>`;
+      skipFixed();renderSlots();
+      const gi=$('#ghost');
+      gi.addEventListener('input',()=>{const v=gi.value;gi.value='';for(const ch of v)onKey(ch)});
+      gi.addEventListener('focus',()=>$('#typebox').classList.add('focus'));
+      gi.addEventListener('blur',()=>{const tb=$('#typebox');if(tb)tb.classList.remove('focus')});
+      setTimeout(()=>gi.focus({preventScroll:true}),30);
+    }else{
+      pr.innerHTML='Type the <b>molecular shape</b>, then press Enter.';
+      ans.innerHTML=`<form id="f3" class="row" autocomplete="off"><input id="ans3" class="txt" placeholder="Molecular shape…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button class="gbtn">Check</button></form>`;
+      $('#f3').addEventListener('submit',e=>{e.preventDefault();checkSolo()});
+      setTimeout(()=>$('#ans3').focus({preventScroll:true}),30);
+    }
+  }
+  else if(G.mode==='count'){
+    G.vars=SHAPES.filter(x=>x.name===s.name);
+    const two=G.vars.length>1;
+    clue.innerHTML=`<div class="namechip"><div class="k">Molecular shape</div><div class="v">${s.name}</div>${two?`<div class="h">This shape has 2 versions. Enter both, in any order.</div>`:''}</div>`;
+    setModel(s,false);
+    pr.innerHTML='How many <b style="color:var(--cream)">bonding atoms</b> and <b style="color:var(--lp)">lone pairs</b> are on the central atom?';
+    const grp=k=>`<div class="vergroup">${two?`<div class="vlabel">Version ${k+1}</div>`:''}<div class="numrow">
+      <div class="ba"><label>Bonding atoms</label><input class="txt cin" data-v="${k}" data-f="ba" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off"></div>
+      <div class="lp"><label>Lone pairs</label><input class="txt cin" data-v="${k}" data-f="lp" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off"></div></div></div>`;
+    ans.innerHTML=`<form id="fc" autocomplete="off">${G.vars.map((_,k)=>grp(k)).join('')}<div style="text-align:right"><button class="gbtn">Check</button></div></form>`;
+    const ins=[...ans.querySelectorAll('.cin')];
+    ins.forEach((el,k)=>el.addEventListener('input',()=>{el.value=el.value.replace(/\D/g,'').slice(0,1);if(el.value&&ins[k+1])ins[k+1].focus()}));
+    $('#fc').addEventListener('submit',e=>{e.preventDefault();const empty=ins.find(x=>!x.value);if(empty){empty.focus();shake(empty);return}checkCount()});
+    setTimeout(()=>ins[0].focus({preventScroll:true}),30);
+  }
+  else if(G.mode==='angle'){
+    clue.innerHTML=`<div class="namechip"><div class="k">Molecular shape</div><div class="v">${s.name}</div><div class="h" style="color:var(--muted)">${s.eg} groups · ${s.ba} atoms · ${s.lp} lone pair${s.lp===1?'':'s'}</div></div>`;
+    setModel(s,true);
+    pr.innerHTML='Pick the <b>bond angle</b>.';
+    const pool=[...new Set(SHAPES.map(x=>x.angle))].filter(a=>a!==s.angle);
+    G.opts=shuffle([s.angle,...shuffle(pool).slice(0,3)]);
+    ans.innerHTML=`<div class="choices">${G.opts.map((o,i)=>`<button class="choice" data-o="${i}"><kbd>${i+1}</kbd>${o}</button>`).join('')}</div>`;
+    ans.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>pickAngle(+b.dataset.o)));
+  }
+}
+
+/* --- phase 1 & 2 typing --- */
+function skipFixed(){while(G.pos<G.chars.length&&!/[a-z]/i.test(G.chars[G.pos]))G.pos++}
+function renderSlots(){
+  let html='',word='';
+  G.chars.forEach((ch,i)=>{
+    if(ch===' '){html+=`<span class="word">${word}</span><span class="gap"></span>`;word='';return}
+    let cls='slot';
+    if(!/[a-z]/i.test(ch))cls+=' fixed done';
+    else if(i<G.pos)cls+=' done';
+    else{
+      if(G.hintShown.has(i))cls+=' hint';
+      else if(G.phase===2&&G.hidden.has(i))cls+=' blank';
+      if(i===G.pos&&!G.done)cls+=' cur';
+    }
+    word+=`<span class="${cls}">${esc(ch)}</span>`;
+  });
+  html+=`<span class="word">${word}</span>`;
+  $('#slots').innerHTML=html;
+}
+function shake(el){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
+function onKey(ch){
+  if(!G||G.done||G.mode!=='name'||G.phase===3)return;
+  if(!/^[a-z]$/i.test(ch))return;
+  const exp=G.chars[G.pos];
+  if(ch.toLowerCase()===exp.toLowerCase()){
+    G.pos++;G.slotMiss=0;skipFixed();renderSlots();fb('','');
+    if(G.pos>=G.chars.length)finishTyped();
+  }else{
+    G.mist++;G.slotMiss++;
+    if(G.phase===2&&G.slotMiss>=2)G.hintShown.add(G.pos);
+    renderSlots();shake($('#typebox'));
+    fb(`Not “${esc(ch)}”. Try again.`,'bad');
+  }
+}
+function finishTyped(){
+  G.done=true;const tb=document.getElementById('typebox');if(tb)tb.classList.add('finished');
+  const perfect=G.mist===0;
+  if(perfect)G.score++;else G.misses.push({s:G.s,why:`${G.mist} wrong key${G.mist>1?'s':''}`});
+  fb(perfect?'Perfect! ✓':`Got it, with ${G.mist} slip${G.mist>1?'s':''}`,perfect?'good':'info');
+  afterAnswer(perfect);
+}
+/* --- phase 3 --- */
+function checkSolo(){
+  if(G.done)return;
+  const v=$('#ans3').value.trim();if(!v){shake($('#ans3'));return}
+  G.done=true;$('#ans3').disabled=true;
+  const ok=normTxt(v)===normTxt(G.s.name);
+  if(ok){G.score++;fb('Correct! ✓','good')}
+  else{G.misses.push({s:G.s,why:`you typed “${esc(v)}”`});fb(`✗ Not quite. The answer is<span class="ans">${G.s.name}</span>`,'bad')}
+  setModel(G.s,true);
+  afterAnswer(ok);
+}
+/* --- count mode --- */
+function checkCount(){
+  if(G.done)return;
+  const ins=[...document.querySelectorAll('.cin')];
+  G.done=true;ins.forEach(x=>x.disabled=true);
+  const val=(k,f)=>+ins.find(x=>x.dataset.v==k&&x.dataset.f===f).value;
+  const given=G.vars.map((_,k)=>({ba:val(k,'ba'),lp:val(k,'lp')}));
+  const left=G.vars.slice();let allOk=true;
+  given.forEach((g,k)=>{
+    const j=left.findIndex(v=>v.ba===g.ba&&v.lp===g.lp);const ok=j>=0;
+    if(ok)left.splice(j,1);else allOk=false;
+    ins.filter(x=>x.dataset.v==k).forEach(x=>x.classList.add(ok?'ok':'no'));
+  });
+  const fmt=v=>`<span style="color:var(--cream)">${v.ba} atoms</span> + <span style="color:var(--lp)">${v.lp} LP</span>`;
+  if(allOk){G.score++;fb(G.vars.length>1?'Both correct! ✓':'Correct! ✓','good')}
+  else{
+    G.misses.push({s:G.s,why:`you said ${given.map(g=>`${g.ba} atoms + ${g.lp} LP`).join(' and ')}`,vars:G.vars});
+    fb(`✗ The answer is<span class="ans">${G.vars.map(fmt).join(' <span style="color:var(--muted)">and</span> ')}</span>`,'bad');
+  }
+  startCycle();
+  afterAnswer(allOk);
+}
+function startCycle(){
+  stopCycle();setModel(G.vars[0],true);
+  if(G.vars.length<2)return;
+  let k=0;const tag=$('#vtag');tag.textContent='Version 1';tag.classList.remove('hidden');
+  G.cycle=setInterval(()=>{k=(k+1)%G.vars.length;mainViewer.setShape(G.vars[k]);tag.textContent='Version '+(k+1)},2300);
+}
+function stopCycle(){if(G&&G.cycle){clearInterval(G.cycle);G.cycle=null}const t=$('#vtag');if(t)t.classList.add('hidden')}
+/* --- angle mode --- */
+function pickAngle(i){
+  if(G.done)return;G.done=true;
+  const s=G.s,ok=G.opts[i]===s.angle;
+  document.querySelectorAll('.choice').forEach((b,k)=>{if(G.opts[k]===s.angle)b.classList.add('right');else if(k===i)b.classList.add('wrong')});
+  if(ok){G.score++;fb('Correct! ✓','good')}
+  else{G.misses.push({s,why:`you picked ${G.opts[i]}`});fb(`✗ The answer is<span class="ans">${s.angle}</span>`,'bad')}
+  afterAnswer(ok);
+}
+
+function afterAnswer(ok){
+  $('#scoreNow').textContent=`✓ ${G.score}`;
+  $('#reveal').innerHTML=(G.vars&&G.vars.length>1)?G.vars.map((v,k)=>`<span class="k">Version ${k+1}</span><span class="v">${v.eg} groups · ${v.ba} atoms + ${v.lp} LP · ${axe(v)} · ${v.angle} · ${v.ex}</span>`).join(''):infoHTML(G.s);
+  $('#reveal').classList.remove('hidden');
+  $('#nextRow').classList.remove('hidden');
+  const ms=ok?1600:4500,tf=$('#timerFill');
+  tf.style.transition='none';tf.style.width='100%';void tf.offsetWidth;
+  tf.style.transition=`width ${ms}ms linear`;tf.style.width='0%';
+  G.timer=setTimeout(next,ms);
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+}
+function next(){
+  if(!G||G.flipping||!G.done)return;
+  clearTimeout(G.timer);
+  G.i++;
+  if(G.i>=G.deck.length){showResults();return}
+  const c=$('#card');G.flipping=true;
+  c.classList.add('flip-out');
+  setTimeout(()=>{
+    renderQ();
+    c.classList.remove('flip-out');c.classList.add('flip-in');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{c.classList.remove('flip-in');setTimeout(()=>{G.flipping=false},280)}));
+  },270);
+}
+$('#nextBtn').addEventListener('click',next);
+
+function showResults(){
+  const tot=G.deck.length,sc=G.score,pct=Math.round(sc/tot*100);
+  saveBest(G.key,sc);
+  const stars=sc>=12?'⭐⭐⭐':sc>=9?'⭐⭐☆':sc>=6?'⭐☆☆':'☆☆☆';
+  const msg=sc===tot?'Flawless. You know these cold.':sc>=10?'Really solid. Go over the misses below.':sc>=6?'Getting there. One more run will help a lot.':'Good start. Run it again, it sticks fast.';
+  const t=TITLES[G.key];
+  let nextBtn='';
+  if(G.mode==='name'&&G.phase<3)nextBtn=`<button class="gbtn" data-start="name:${G.phase+1}">Go to Phase ${G.phase+1} →</button>`;
+  else if(G.mode==='name'&&G.phase===3)nextBtn=`<button class="gbtn" data-start="count:0">Try Count It →</button>`;
+  else if(G.mode==='count')nextBtn=`<button class="gbtn" data-start="angle:0">Bonus: Bond Angles →</button>`;
+  const what=G.mode==='name'&&G.phase<3?'<p style="color:var(--muted);font-size:13px;margin:0">A point counts only if you typed it with zero wrong keys.</p>':'';
+  $('#resultsBox').innerHTML=`<div style="color:var(--muted);font-weight:700">${t[0]} · ${t[1]}</div>
+    <div class="bigscore">${sc}<span style="color:var(--muted);font-size:34px"> / ${tot}</span></div>
+    <div class="stars">${stars}</div>
+    <div style="font-size:18px;font-weight:700">${pct}% · ${msg}</div>${what}
+    ${G.misses.length?`<div class="misslist"><div style="color:var(--muted);font-size:13px;font-weight:700">REVIEW THESE</div>${G.misses.map(m=>`<div class="miss"><span><b>${m.s.name}</b> · ${(m.vars||[m.s]).map(v=>`${v.eg} groups, ${v.ba} atoms, ${v.lp} LP · ${v.angle} · ${v.ex}`).join(' <i>or</i> ')}</span><span>${m.why}</span></div>`).join('')}</div>`:''}
+    <div class="resbtns"><button class="gbtn ghostbtn" data-start="${G.mode}:${G.phase}">↻ Play again</button>${nextBtn}<button class="gbtn ghostbtn" data-go="home">Home</button></div>`;
+  show('results');
+}
+
+/* ================= GLOBAL EVENTS ================= */
+document.addEventListener('click',e=>{
+  const st=e.target.closest('[data-start]');
+  if(st){const [m,p]=st.dataset.start.split(':');startRound(m,p);return}
+  const go=e.target.closest('[data-go]');
+  if(go){if(G){clearTimeout(G.timer);stopCycle()}G=null;show(go.dataset.go);return}
+  // keep typing box focused during phase 1/2
+  if(G&&G.mode==='name'&&G.phase<3&&!G.done&&!$('#play').classList.contains('hidden')&&!e.target.closest('button,canvas')){
+    const gi=$('#ghost');if(gi)gi.focus({preventScroll:true});
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(!$('#modal').classList.contains('hidden')&&e.key==='Escape'){$('#modal').classList.add('hidden');return}
+  if(!G||$('#play').classList.contains('hidden'))return;
+  if(e.key==='Enter'&&G.done){e.preventDefault();next();return}
+  if(G.mode==='angle'&&!G.done&&/^[1-4]$/.test(e.key)){pickAngle(+e.key-1);return}
+  if(G.mode==='name'&&G.phase<3&&!G.done&&e.target.id!=='ghost'&&e.key.length===1&&!e.metaKey&&!e.ctrlKey){
+    e.preventDefault();onKey(e.key);const gi=$('#ghost');if(gi)gi.focus({preventScroll:true});
+  }
+});
+
+buildLearn();
+paintBest();
+</script>
+</body>
+</html>

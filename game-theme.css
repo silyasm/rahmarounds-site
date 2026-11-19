@@ -1,0 +1,97 @@
+/* ===========================================================
+   Rahma Rounds — game theme
+   Restyles vsepr.html and amino.html to match the main site.
+   Loaded AFTER each game's inline CSS, so these rules win.
+   Colors come from the tokens in styles.css.
+=========================================================== */
+:root{
+  --plum:#2f1640; --panel:rgba(255,255,255,.6); --panel2:rgba(255,255,255,.85); --deep:rgba(77,42,134,.07);
+  --line:rgba(77,42,134,.18); --text:var(--ink); --muted:var(--ink-soft); --ghost:rgba(77,42,134,.3);
+  --good:#1f7a4d; --bad:#b3365f; --warn:#b3365f;
+  --lp:#8a3fc0; --atom:#8a7656; --center:#cda45e; --gold:#cda45e; --accent:#cda45e;
+  --lav:#7a45b8; --lilac:#4d2a86; --night:#5E4B6C;
+  --goldtxt:#8a6414;
+}
+body.vsepr{--cream:#8a7656}
+body.amino{--cream:#fbf6ea}
+
+body{background:var(--lav-100);color:var(--ink);font-family:var(--font-body);min-height:0;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;padding:44px 24px 64px}
+button,input{font-family:var(--font-body)}
+h1,h2,h3{font-family:var(--font-display);color:var(--purple-700);font-weight:600}
+.wrap h1{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--purple-700);
+  font-weight:600;font-size:clamp(2.3rem,5vw,3.5rem);line-height:1.05;letter-spacing:-.01em;margin:14px 0 10px}
+.wrap h2{font-weight:600}
+
+/* labels */
+.chip,.tag,.vtag,.vergroup .vlabel{font-family:var(--font-body);font-weight:700}
+.chip{background:var(--gold-400);color:var(--plum-950)}
+.tag{color:var(--purple-600)}
+.ghero p,.sub{color:var(--ink-soft);font-size:1.02rem}
+.hublink{color:var(--purple-600);border-bottom:1px dashed var(--purple-600);font-size:.9rem}
+.hublink:hover{color:var(--plum-950)}
+.legend{color:var(--ink-soft)}
+.dot,.catdot{box-shadow:0 0 0 1px rgba(47,22,64,.3)}
+
+/* buttons */
+.gbtn{display:inline-flex;align-items:center;gap:8px;background:var(--purple-700);color:var(--cream);border:2px solid transparent;
+  border-radius:10px;padding:13px 26px;font:600 .98rem var(--font-body);letter-spacing:0;
+  transition:transform .15s ease,background .2s ease,color .2s ease}
+.gbtn:hover{filter:none;background:var(--plum-950);transform:translateY(-2px)}
+.gbtn:active{transform:scale(.98)}
+.gbtn.ghost,.gbtn.ghostbtn{background:transparent;border-color:var(--purple-700);color:var(--purple-700)}
+.gbtn.ghost:hover,.gbtn.ghostbtn:hover{background:var(--purple-700);color:var(--cream)}
+.gbtn.small{padding:8px 16px;font-size:.88rem}
+
+/* panels */
+.mode,.card,.results,.step,.mini,.tricks{background:var(--panel);border:1px solid var(--line);box-shadow:0 8px 26px rgba(47,22,64,.08)}
+.mode::before{background:linear-gradient(90deg,var(--gold-400),var(--purple-600))}
+.mode h3,.step h3,.fam h3,.famhead h3,.learn h2,.mini b,.gi b{font-family:var(--font-display);font-weight:600;color:var(--purple-700)}
+.mode p,.step p,.step li,.tricks li{color:var(--ink-soft)}
+.step ul,.tricks ul{list-style:disc}
+.step .eg{color:var(--ink)}
+.tricks h3{color:var(--purple-700)}
+.tricks li b,.best,.lvl .best,.info .v em,.vergroup .vlabel,.vsepr .miss b{color:var(--goldtxt)}
+.num,.phb{color:var(--purple-700);background:rgba(77,42,134,.08);border-color:var(--line)}
+.phb:hover{background:var(--purple-700);color:var(--cream);border-color:var(--purple-700)}
+.phase-btn:hover,.lvl.click:hover,.choice:hover,.mini:hover{border-color:var(--purple-600)}
+.arrowb{background:var(--purple-700);color:var(--cream)}
+.tabs span.on{background:var(--purple-700);color:var(--cream)}
+
+/* progress */
+.bar,.timer{background:rgba(77,42,134,.12)}
+.bar i{background:linear-gradient(90deg,var(--gold-400),var(--purple-600))}
+.timer i{background:var(--gold-400)}
+.pill{background:rgba(77,42,134,.08);color:var(--ink)}
+
+/* inputs */
+.typebox,.txt{background:#fff;color:var(--ink);border:1px solid var(--line);font-family:var(--font-body)}
+.typebox.focus,.txt:focus{border-color:var(--purple-600);box-shadow:0 0 0 3px rgba(92,53,154,.15)}
+.txt{font-weight:600}
+.slots{font-family:var(--font-display);font-weight:700}
+.slot{border-bottom-color:rgba(77,42,134,.25)}
+.slot.done{color:var(--purple-700);border-bottom-color:var(--purple-600)}
+.slot.hint{color:var(--bad)}
+@keyframes blink{50%{border-bottom-color:transparent}}
+.namechip .v,.feedback .ans,.ask .v,.numrow .txt{font-family:var(--font-display);font-weight:700}
+.namechip .v,.feedback .ans,.ask .v{color:var(--purple-700)}
+.clue .v,.bigscore,.stars{font-family:var(--font-display)}
+.feedback.good{color:var(--good)}.feedback.bad{color:var(--bad)}
+.bigscore{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--purple-700);font-weight:700}
+.opt:hover{border-color:var(--purple-600)}
+.gi{border:1px solid var(--line)}
+
+/* dark 3D stage + mini canvases stay plum so atoms stay visible */
+.stage .drag-tip,.mystery{color:#cdb8e6}
+.mini canvas{background:radial-gradient(circle at 50% 45%,#3a1752,#1d0c29 75%);border-radius:10px}
+
+/* modal */
+.modal{z-index:200}
+.modal .box{background:var(--cream);border:1px solid var(--line)}
+.modal h2{color:var(--purple-700)}
+
+/* amino fixes: hard-coded pale colors */
+.slot{color:var(--ghost)}
+.slot.blank{color:transparent}
+#scoreNow{color:var(--good)!important}
+.top .t small,.topbar .title small{font-family:var(--font-body)}

@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amino Acid Rounds</title>
+<meta name="theme-color" content="#2f1640">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+:root{--plum:#2A0B3D;--purple:#4F1964;--night:#5E4B6C;--gold:#E9B75F;--lav:#E6AFFC;--lilac:#EDD7FF;--cream:#F9F3DF;
+ --text:#F6EEFF;--muted:#B9A6CC;--line:rgba(230,175,252,.18);--panel:rgba(79,25,100,.32);--deep:rgba(42,11,61,.6);--good:#9EE6BE;--bad:#F7A8C4}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:radial-gradient(1200px 700px at 20% -10%,#4F1964 0%,#2A0B3D 45%,#171419 100%) fixed;background-color:#171419;color:var(--text);font-family:Lora,Georgia,serif;min-height:100vh;line-height:1.45}
+.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 70px}
+.hidden{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+.chip{display:inline-block;background:var(--gold);color:var(--plum);font:800 11px/1 Fraunces,Georgia,serif;letter-spacing:.14em;padding:6px 10px;border-radius:6px;text-transform:uppercase}
+h1{font:900 clamp(38px,6vw,62px)/1 Fraunces,Georgia,serif;margin:12px 0 8px;letter-spacing:-.01em;background:linear-gradient(90deg,var(--gold) 0%,#F3CFA0 30%,var(--lav) 70%,#C58BFF 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font:900 30px/1.1 Fraunces,Georgia,serif;margin:0 0 6px}
+.sub{color:var(--muted);margin:0 auto;max-width:600px}
+.ghero{text-align:center;padding:16px 0 6px}
+.legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:14px;font-size:13px;color:var(--muted)}
+.catdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:22px}
+.mode{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;position:relative;overflow:hidden}
+.mode::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--gold),var(--lav))}
+.mode h3{font:800 22px/1.1 Fraunces,Georgia,serif;margin:8px 0 6px}
+.mode p{color:var(--muted);font-size:13.5px;margin:0 0 12px}
+.tag{font:800 11px Fraunces,Georgia,serif;letter-spacing:.14em;color:var(--lav);text-transform:uppercase}
+.lvl{background:var(--deep);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.lvl>b{flex:1;font-weight:600;font-size:14.5px}.lvl small{color:var(--muted);font-size:12px;display:block;font-weight:400}
+.lvl .best{font-size:11.5px;color:var(--gold);font-weight:500}
+.ph{display:flex;gap:6px}
+.phb{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font:800 15px Fraunces,Georgia,serif;background:rgba(230,175,252,.12);border:1px solid var(--line);color:var(--lilac);transition:all .15s;position:relative}
+.phb:hover{background:var(--gold);color:var(--plum);border-color:var(--gold)}
+.phb.beat::after{content:"";position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;background:var(--good);border:2px solid var(--plum)}
+.lvl.click{cursor:pointer;transition:border-color .15s}.lvl.click:hover{border-color:var(--gold)}
+.arrowb{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:var(--gold);color:var(--plum);font-weight:800}
+.gbtn{background:linear-gradient(135deg,var(--gold),#F0C987);color:var(--plum);border:0;border-radius:12px;padding:11px 18px;font:800 15px Fraunces,Georgia,serif;letter-spacing:.02em;transition:transform .1s,filter .15s}
+.gbtn:hover{filter:brightness(1.07)}.gbtn:active{transform:scale(.97)}
+.gbtn.ghost{background:rgba(230,175,252,.1);color:var(--lilac);border:1px solid var(--line)}
+.gbtn.small{padding:8px 13px;font-size:13px;border-radius:10px}
+.phase-hint{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* play */
+.top{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.top .t{flex:1;min-width:160px;font:800 18px Fraunces,Georgia,serif}.top .t small{display:block;font:400 12.5px Lora,Georgia,serif;color:var(--muted)}
+.pill{background:rgba(230,175,252,.1);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+.bar{height:6px;border-radius:6px;background:rgba(230,175,252,.1);overflow:hidden;margin-bottom:14px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--lav));transition:width .3s}
+.card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;
+ transition:transform .26s ease,opacity .26s ease;transform:perspective(1400px) rotateY(0)}
+.card.flip-out{transform:perspective(1400px) rotateY(88deg);opacity:.2}
+.card.flip-in{transform:perspective(1400px) rotateY(-88deg);opacity:.2;transition:none}
+.card.single{grid-template-columns:1fr}
+@media(max-width:760px){.card{grid-template-columns:1fr}}
+.paper{background:var(--cream);border-radius:16px;display:flex;align-items:center;justify-content:center;padding:14px;min-height:320px;box-shadow:inset 0 0 0 1px rgba(42,11,61,.08)}
+.paper svg{width:100%;height:100%;max-height:340px}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.tabs{display:flex;gap:6px;background:var(--deep);padding:5px;border-radius:12px;border:1px solid var(--line)}
+.tabs span{flex:1;text-align:center;padding:8px 6px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted)}
+.tabs span.on{background:linear-gradient(135deg,var(--gold),#F0C987);color:var(--plum)}
+.prompt{color:var(--muted);font-size:14.5px}.prompt b{color:var(--text)}
+.typebox{position:relative;background:rgba(23,20,25,.55);border:1px solid var(--line);border-radius:14px;padding:18px 10px;display:flex;justify-content:center;align-items:center;min-height:84px;cursor:text}
+.typebox.focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(233,183,95,.14)}
+.slots{display:flex;flex-wrap:wrap;justify-content:center;row-gap:10px;font:800 clamp(24px,4.2vw,34px)/1.2 Fraunces,Georgia,serif}
+.word{display:inline-flex;gap:3px;white-space:nowrap}.gap{width:.6em}
+.slot{min-width:.7em;text-align:center;border-bottom:3px solid rgba(230,175,252,.22);color:rgba(237,215,255,.3);padding:0 1px}
+.slot.done{color:var(--gold);border-bottom-color:rgba(233,183,95,.5)}
+.slot.blank{color:transparent}.slot.hint{color:var(--bad)}
+.slot.cur{border-bottom-color:var(--lav);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{border-bottom-color:transparent}}
+.ghostin{position:absolute;opacity:0;inset:0;width:100%;height:100%;font-size:16px;border:0;padding:0;cursor:text}
+.shake{animation:shake .32s}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.txt{width:100%;background:rgba(23,20,25,.55);border:1px solid var(--line);border-radius:12px;padding:13px 14px;color:var(--text);font:600 19px Lora,Georgia,serif;outline:none}
+.txt:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(233,183,95,.14)}
+.row{display:flex;gap:10px}.row .txt{flex:1}
+.feedback{min-height:24px;font-weight:600;font-size:15px}
+.feedback.good{color:var(--good)}.feedback.bad{color:var(--bad)}.feedback.info{color:var(--muted);font-weight:500}
+.feedback .ans{display:block;font:800 24px Fraunces,Georgia,serif;color:var(--gold);margin-top:2px}
+.info{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;background:var(--deep);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13.5px}
+.info .k{color:var(--muted)}.info .v{font-weight:600}.info .v em{font-style:normal;color:var(--gold)}
+.nextrow{display:flex;justify-content:flex-end;align-items:center;gap:10px}
+.nextrow small{color:var(--muted);font-size:12px}
+.timer{height:3px;background:rgba(230,175,252,.12);border-radius:3px;overflow:hidden;flex:1}.timer i{display:block;height:100%;background:var(--gold);width:100%}
+.ask{text-align:center;padding:4px 0 12px}.ask .k{color:var(--muted);font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+.ask .v{font:900 clamp(32px,5vw,48px) Fraunces,Georgia,serif;margin-top:4px;color:var(--gold)}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:860px){.opts{grid-template-columns:repeat(2,1fr)}}
+.opt{background:var(--cream);border-radius:16px;padding:10px 10px 26px;border:3px solid transparent;position:relative;height:250px;display:flex;align-items:center;justify-content:center;transition:transform .12s,border-color .15s}
+.opt:hover{transform:translateY(-2px);border-color:var(--lav)}
+.opt svg{width:100%;height:100%}
+.opt kbd{position:absolute;top:8px;left:10px;font:800 14px Fraunces,Georgia,serif;color:var(--night)}
+.opt.right{border-color:#5FCB8E;box-shadow:0 0 0 4px rgba(158,230,190,.3)}
+.opt.wrong{border-color:#E46A97;opacity:.8}
+.opt.dim{opacity:.5}
+.opt .badge{position:absolute;bottom:6px;left:0;right:0;text-align:center;font:800 14px Fraunces,Georgia,serif;color:var(--plum)}
+.pickfoot{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+
+/* results */
+.results{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:28px 20px;text-align:center}
+.bigscore{font:900 76px/1 Fraunces,Georgia,serif;margin:12px 0 4px;background:linear-gradient(90deg,var(--gold),var(--lav));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stars{font-size:32px;letter-spacing:6px;margin:6px 0}
+.misslist{text-align:left;max-width:720px;margin:18px auto 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.miss{background:var(--cream);color:var(--plum);border-radius:14px;padding:8px 10px;font-size:13px}
+.miss svg{width:100%;height:130px}
+.miss b{display:block;font:800 16px Fraunces,Georgia,serif}
+.miss span{color:var(--night)}
+.resbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+
+/* study */
+.famhead{display:flex;align-items:center;gap:10px;margin:26px 0 10px}
+.famhead h3{font:800 20px Fraunces,Georgia,serif;margin:0}
+.famhead small{color:var(--muted)}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.gi{background:var(--cream);border-radius:14px;padding:8px 8px 10px;color:var(--plum);text-align:center;border:0;transition:transform .12s}
+.gi:hover{transform:translateY(-2px)}
+.gi svg{width:100%;height:150px}
+.gi b{display:block;font:800 16px Fraunces,Georgia,serif}
+.gi small{font-size:12.5px;color:var(--night)}
+.tricks{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-top:16px}
+.tricks h3{font:800 18px Fraunces,Georgia,serif;margin:0 0 8px;color:var(--gold)}
+.tricks ul{margin:0;padding-left:18px;columns:2 280px;column-gap:28px}
+.tricks li{font-size:14px;margin-bottom:5px;break-inside:avoid;color:#e5d7f2}
+.tricks li b{color:var(--gold)}
+.modal{position:fixed;inset:0;background:rgba(10,4,16,.78);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal .box{background:#2A0B3D;border:1px solid var(--line);border-radius:20px;padding:16px;width:min(560px,100%);max-height:94vh;overflow:auto}
+.modal .paper{min-height:340px}
+.modal h2{margin:14px 0 8px}
+.typebox:not(.focus):not(.finished)::after{content:"tap here to type";position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);pointer-events:none}
+.hublink{display:inline-block;margin-top:12px;color:var(--muted);font-size:13px;text-decoration:none;border-bottom:1px dashed var(--line)}
+body{-webkit-text-size-adjust:100%}button{-webkit-tap-highlight-color:transparent}
+@media(max-width:760px){.card{padding:12px;gap:12px;border-radius:18px}.paper{min-height:240px}.paper svg{max-height:260px}.top .t{order:-1;flex-basis:100%}.bigscore{font-size:58px}.opt{height:200px}.tricks ul{columns:1}}
+@media(max-width:420px){.wrap{padding:14px 12px 50px}.opts{gap:8px}.opt{height:170px;padding:8px 6px 24px}.opt .badge{font-size:11.5px}.gal{grid-template-columns:repeat(2,1fr)}.gi svg{height:120px}}
+</style>
+<link rel="stylesheet" href="game-theme.css"></head>
+<body class="amino">
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo-link" aria-label="Rahma Rounds — home">
+      <img src="logo.png" alt="Rahma Rounds" class="logo-img" style="display:none;"
+           onload="this.style.display='inline-block'; this.nextElementSibling.style.display='none';"
+           onerror="this.style.display='none';">
+      <span class="logo">Rahma R<span class="moon"></span>unds</span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="mentorship.html">Mentorship</a>
+      <a href="scholarships.html">Scholarships</a>
+      <a href="resources.html" class="active">Resources</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+  </div>
+</header><div class="wrap">
+
+<!-- HOME -->
+<section id="home">
+  <div class="ghero">
+    <span class="chip">Rahma Rounds</span>
+    <h1>Amino Acid Rounds</h1>
+    <p class="sub">All 20 amino acids. Learn each structure with its full name, 3-letter code and 1-letter code.</p>
+    <a class="hublink" href="games.html">← All study games</a>
+    <div class="legend" id="legend"></div>
+  </div>
+  <div class="modes">
+    <div class="mode"><span class="tag">Start here</span><h3>📖 Study the 20</h3>
+      <p>All 20 structures grouped by type, plus memory tricks for the 1-letter codes that don't match the first letter.</p>
+      <button class="gbtn ghost" data-go="study">Open the study sheet →</button></div>
+    <div class="mode"><span class="tag">Game 1 · Type it</span><h3>⌨️ Name the Structure</h3>
+      <p>You see the structure and type the answer. Go through Phase 1 (trace), 2 (gaps), then 3 (solo).</p>
+      <div id="typeLevels"></div>
+      <div class="phase-hint">1 = trace · 2 = some letters missing · 3 = no hints. A green dot means you've played it.</div>
+    </div>
+    <div class="mode"><span class="tag">Game 2 · Opposite</span><h3>🔍 Spot the Structure</h3>
+      <p>You get the name and click the right structure out of 4. Keys 1–4 work too.</p>
+      <div id="pickLevels"></div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDY -->
+<section id="study" class="hidden">
+  <div class="top"><button class="gbtn ghost small" data-go="home">← Home</button><div class="t">Study the 20<small>Tap any card to make it bigger</small></div></div>
+  <h2>How to read these</h2>
+  <p style="color:var(--muted);margin:0">Every amino acid has the same backbone: an amino group (H₃N⁺), a central α-carbon with an H, and a carboxylate (COO⁻). The only thing that changes is the <b style="color:var(--gold)">side chain</b>, the shaded part. Learn the side chain and you know the amino acid.</p>
+  <div class="tricks"><h3>Tricky 1-letter codes</h3><ul>
+    <li><b>F</b> Phenylalanine: sounds like "<b>F</b>enylalanine"</li>
+    <li><b>W</b> Tryptophan: its double ring looks like a <b>W</b>, "t<b>W</b>yptophan"</li>
+    <li><b>Y</b> Tyrosine: "t<b>Y</b>rosine"</li>
+    <li><b>K</b> Lysine: L was taken, K sits right before L</li>
+    <li><b>R</b> Arginine: "a<b>R</b>ginine", sounds like the letter R</li>
+    <li><b>D</b> Aspartic acid: "aspar<b>D</b>ic", D comes before E like Asp before Glu</li>
+    <li><b>E</b> Glutamic acid: "glu<b>E</b>tamic"</li>
+    <li><b>N</b> Asparagine: "asparagi<b>N</b>e", the amide one has N</li>
+    <li><b>Q</b> Glutamine: "<b>Q</b>-tamine"</li>
+    <li>The other 11 use their first letter: G A V L I M P S T C H</li>
+  </ul></div>
+  <div id="studyGal"></div>
+  <div style="text-align:center;margin-top:28px"><button class="gbtn" data-start="type:full:1">Ready? Start Game 1 · Phase 1 →</button></div>
+</section>
+
+<!-- PLAY -->
+<section id="play" class="hidden">
+  <div class="top">
+    <button class="gbtn ghost small" data-go="home">← Quit</button>
+    <div class="t" id="playTitle"></div>
+    <span class="pill" id="prog"></span>
+    <span class="pill" id="scoreNow" style="color:var(--gold)"></span>
+  </div>
+  <div class="bar"><i id="barFill"></i></div>
+  <div class="card" id="card"></div>
+</section>
+
+<!-- RESULTS -->
+<section id="results" class="hidden"><div class="results" id="resultsBox"></div></section>
+
+</div>
+
+<div class="wave-divider">
+  <svg viewBox="0 0 1440 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path style="fill: var(--plum-950)" d="M0,40 C 320,120 500,0 760,40 C 1040,82 1180,10 1440,50 L1440,110 L0,110 Z"></path>
+  </svg>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="index.html" class="logo-link" aria-label="Rahma Rounds — home">
+      <img src="logo.png" alt="Rahma Rounds" class="logo-img" style="display:none;"
+           onload="this.style.display='inline-block'; this.nextElementSibling.style.display='none';"
+           onerror="this.style.display='none';">
+      <span class="logo">Rahma R<span class="moon"></span>unds</span>
+    </a>
+    <div class="footer-contact">
+      <h4>Contact</h4>
+      <p><a href="mailto:rahmarounds@gmail.com">rahmarounds@gmail.com</a></p>
+      <p><a href="https://instagram.com/rahmarounds" target="_blank" rel="noopener">@rahmarounds</a></p>
+      <p><a href="https://www.linkedin.com/company/rahma-rounds" target="_blank" rel="noopener">LinkedIn</a></p>
+    </div>
+  </div>
+</footer>
+
+<div class="modal hidden" id="modal"><div class="box">
+  <div class="paper" id="modalStruct"></div>
+  <h2 id="modalName"></h2>
+  <div class="info" id="modalInfo"></div>
+  <div style="text-align:right;margin-top:12px"><button class="gbtn ghost" id="modalClose">Close</button></div>
+</div></div>
+
+<script src="script.js"></script>
+<script>
+/* ===== Amino acid data + structure renderer (shared by mockup and game) ===== */
+const AA=[
+ {n:'Glycine',t:'Gly',o:'G',cat:'np',sc:['H']},
+ {n:'Alanine',t:'Ala',o:'A',cat:'np',sc:['CH₃']},
+ {n:'Valine',t:'Val',o:'V',cat:'np',sc:[{c:'CH',l:'CH₃',r:'CH₃'}]},
+ {n:'Leucine',t:'Leu',o:'L',cat:'np',sc:['CH₂',{c:'CH',l:'CH₃',r:'CH₃'}]},
+ {n:'Isoleucine',t:'Ile',o:'I',cat:'np',sc:[{c:'CH',lh:'H₃C'},'CH₂','CH₃']},
+ {n:'Methionine',t:'Met',o:'M',cat:'np',sc:['CH₂','CH₂','S','CH₃']},
+ {n:'Proline',t:'Pro',o:'P',cat:'np',sc:'pro'},
+ {n:'Phenylalanine',t:'Phe',o:'F',cat:'np',sc:['CH₂',{ring:'benz'}]},
+ {n:'Tryptophan',t:'Trp',o:'W',cat:'np',sc:['CH₂',{ring:'ind'}]},
+ {n:'Serine',t:'Ser',o:'S',cat:'po',sc:['CH₂','OH']},
+ {n:'Threonine',t:'Thr',o:'T',cat:'po',sc:[{c:'CH',l:'OH',r:'CH₃'}]},
+ {n:'Cysteine',t:'Cys',o:'C',cat:'po',sc:['CH₂','SH']},
+ {n:'Tyrosine',t:'Tyr',o:'Y',cat:'po',sc:['CH₂',{ring:'benz',oh:1}]},
+ {n:'Asparagine',t:'Asn',o:'N',cat:'po',sc:['CH₂',{c:'C',l:'NH₂',r:'O',rd:1}]},
+ {n:'Glutamine',t:'Gln',o:'Q',cat:'po',sc:['CH₂','CH₂',{c:'C',l:'NH₂',r:'O',rd:1}]},
+ {n:'Lysine',t:'Lys',o:'K',cat:'pos',sc:['CH₂','CH₂','CH₂','CH₂','NH₃⁺']},
+ {n:'Arginine',t:'Arg',o:'R',cat:'pos',sc:['CH₂','CH₂','CH₂','NH',{c:'C',rh:'NH₂⁺',rhd:1},'NH₂']},
+ {n:'Histidine',t:'His',o:'H',cat:'pos',sc:['CH₂',{ring:'imid'}]},
+ {n:'Aspartic acid',t:'Asp',o:'D',cat:'neg',sc:['CH₂',{c:'C',l:'O⁻',r:'O',rd:1}]},
+ {n:'Glutamic acid',t:'Glu',o:'E',cat:'neg',sc:['CH₂','CH₂',{c:'C',l:'O⁻',r:'O',rd:1}]},
+];
+const CATS={
+ np:{name:'Nonpolar · hydrophobic',short:'Nonpolar',col:'#E9B75F'},
+ po:{name:'Polar · neutral',short:'Polar',col:'#E6AFFC'},
+ pos:{name:'Basic · (+) charge',short:'Basic (+)',col:'#9EE6BE'},
+ neg:{name:'Acidic · (−) charge',short:'Acidic (−)',col:'#F7A8C4'},
+};
+
+function lw(s){let w=0;for(const ch of s)w+=/[₀-₉⁺⁻]/.test(ch)?5.2:8.6;return w}
+function structSVG(aa,opt={}){
+  const ink=opt.ink||'#2A0B3D', hlc=opt.hl||CATS[aa.cat].col;
+  const N=[],E=[],CIRC=[];
+  const node=(x,y,l='',sc=false)=>{N.push({x,y,l,sc});return N.length-1};
+  const bond=(a,b,o=1,ctr=null)=>E.push({a,b,o,ctr});
+  const X=120,Y=72,S=34;
+  const ca=node(X,Y,'C');
+  bond(ca,node(X,Y-34,'H'));
+  const cc=node(X+40,Y,'C');bond(ca,cc);
+  bond(cc,node(X+62,Y-24,'O'),2);bond(cc,node(X+64,Y+24,'O⁻'));
+  const poly=(cx,cy,R,n,startDeg)=>{const v=[];for(let k=0;k<n;k++){const a=(startDeg+k*360/n)*Math.PI/180;v.push(node(cx+R*Math.cos(a),cy+R*Math.sin(a),'',true))}return v};
+  if(aa.sc==='pro'){
+    const n=node(X-42,Y,'H₂N⁺');
+    const cb=node(X+8,Y+38,'CH₂',true),cg=node(X-22,Y+62,'CH₂',true),cd=node(X-50,Y+38,'H₂C',true);
+    bond(n,ca);bond(ca,cb);bond(cb,cg);bond(cg,cd);bond(cd,n);
+  }else{
+    bond(node(X-44,Y,'H₃N⁺'),ca);
+    let cur=ca,x=X,y=Y;
+    for(const st of aa.sc){
+      if(typeof st==='string'){y+=S;const k=node(x,y,st,true);bond(cur,k);cur=k;continue}
+      if(st.c){
+        y+=S;const k=node(x,y,st.c,true);bond(cur,k);cur=k;
+        if(st.lh)bond(k,node(x-40,y,st.lh,true));
+        if(st.rh)bond(k,node(x+46,y,st.rh,true),st.rhd?2:1);
+        if(st.l)bond(k,node(x-24,y+30,st.l,true));
+        if(st.r)bond(k,node(x+24,y+30,st.r,true),st.rd?2:1);
+        continue;
+      }
+      if(st.ring==='benz'){
+        const R=20,cy=y+30+R;const v=poly(x,cy,R,6,-90);
+        bond(cur,v[0]);for(let k=0;k<6;k++)bond(v[k],v[(k+1)%6]);
+        CIRC.push([x,cy,R*0.6]);
+        if(st.oh)bond(v[3],node(x,cy+R+26,'OH',true));
+      }
+      if(st.ring==='imid'){
+        const R=19,cy=y+28+R;const v=poly(x,cy,R,5,-90);
+        N[v[4]].l='HN';N[v[2]].l='NH⁺';
+        bond(cur,v[0]);
+        for(let k=0;k<5;k++){const dbl=(k===0||k===2);bond(v[k],v[(k+1)%5],dbl?2:1,dbl?[x,cy]:null)}
+      }
+      if(st.ring==='ind'){
+        const R=17,cy=y+28+R;const v=poly(x,cy,R,5,-90);
+        N[v[3]].l='HN';
+        bond(cur,v[0]);
+        for(let k=0;k<5;k++){const dbl=(k===4);bond(v[k],v[(k+1)%5],dbl?2:1,dbl?[x,cy]:null)}
+        const A=N[v[1]],B=N[v[2]],s=Math.hypot(B.x-A.x,B.y-A.y),mx=(A.x+B.x)/2,my=(A.y+B.y)/2;
+        let nx=mx-x,ny=my-cy;const nl=Math.hypot(nx,ny);nx/=nl;ny/=nl;
+        const hx=mx+nx*s*Math.sqrt(3)/2,hy=my+ny*s*Math.sqrt(3)/2;
+        const a0=Math.atan2(A.y-hy,A.x-hx),a1=Math.atan2(B.y-hy,B.x-hx);
+        let step=Math.PI/3;let diff=a1-a0;while(diff>Math.PI)diff-=2*Math.PI;while(diff<-Math.PI)diff+=2*Math.PI;if(diff<0)step=-step;
+        const hv=[v[1]];for(let k=1;k<6;k++){const a=a0+step*k;hv.push(k===1?v[2]:node(hx+s*Math.cos(a),hy+s*Math.sin(a),'',true))}
+        for(let k=1;k<6;k++)bond(hv[k],hv[(k+1)%6]);
+        CIRC.push([hx,hy,s*0.58]);
+      }
+    }
+  }
+  const trim=(nd,ux,uy)=>{if(!nd.l)return 0;const hw=lw(nd.l)/2+2,hh=9;return Math.min(Math.abs(ux)>1e-6?hw/Math.abs(ux):1e9,Math.abs(uy)>1e-6?hh/Math.abs(uy):1e9)+1};
+  let lines='';
+  for(const e of E){
+    const a=N[e.a],b=N[e.b];let dx=b.x-a.x,dy=b.y-a.y;const L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+    const ta=trim(a,ux,uy),tb=trim(b,-ux,-uy);
+    const x1=a.x+ux*ta,y1=a.y+uy*ta,x2=b.x-ux*tb,y2=b.y-uy*tb;
+    if(e.o===2&&!e.ctr){const px=-uy*2.6,py=ux*2.6;
+      lines+=`<line x1="${x1+px}" y1="${y1+py}" x2="${x2+px}" y2="${y2+py}"/><line x1="${x1-px}" y1="${y1-py}" x2="${x2-px}" y2="${y2-py}"/>`;
+    }else{
+      lines+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+      if(e.o===2){const [cx,cy]=e.ctr;let px=-uy,py=ux;if((cx-(a.x+b.x)/2)*px+(cy-(a.y+b.y)/2)*py<0){px=-px;py=-py}
+        const sh=0.2;lines+=`<line x1="${x1+dx*sh+px*4.5}" y1="${y1+dy*sh+py*4.5}" x2="${x2-dx*sh+px*4.5}" y2="${y2-dy*sh+py*4.5}"/>`}
+    }
+  }
+  const circ=CIRC.map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="none"/>`).join('');
+  const labels=N.filter(n=>n.l).map(n=>`<text x="${n.x}" y="${n.y}">${n.l}</text>`).join('');
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9,sx0=1e9,sy0=1e9,sx1=-1e9,sy1=-1e9;
+  for(const n of N){const hw=n.l?lw(n.l)/2:0,hh=n.l?9:0;
+    x0=Math.min(x0,n.x-hw);x1=Math.max(x1,n.x+hw);y0=Math.min(y0,n.y-hh);y1=Math.max(y1,n.y+hh);
+    if(n.sc){sx0=Math.min(sx0,n.x-hw);sx1=Math.max(sx1,n.x+hw);sy0=Math.min(sy0,n.y-hh);sy1=Math.max(sy1,n.y+hh)}}
+  const pad=14;x0-=pad;y0-=pad;x1+=pad;y1+=pad;
+  const hl=opt.noHL?'':`<rect x="${sx0-7}" y="${sy0-6}" width="${sx1-sx0+14}" height="${sy1-sy0+12}" rx="9" fill="${hlc}" fill-opacity="0.42"/>`;
+  return `<svg class="struct" viewBox="${x0} ${y0} ${x1-x0} ${y1-y0}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="structure">${hl}
+   <g stroke="${ink}" stroke-width="1.7" stroke-linecap="round">${lines}${circ}</g>
+   <g fill="${ink}" font-family="Lora,Georgia,serif" font-weight="600" font-size="14" text-anchor="middle" dominant-baseline="central">${labels}</g></svg>`;
+}
+
+
+/* ================= EXTRA DATA ================= */
+const NOTES={
+ G:'Just an H. Smallest one, and the only one that isn\'t chiral',
+ A:'One methyl group (CH₃)',
+ V:'Branched, a V-shaped fork of two CH₃',
+ L:'CH₂ then a fork of two CH₃',
+ I:'Branch right at the β-carbon, then CH₂–CH₃. Two chiral centers',
+ M:'Has sulfur in the middle of the chain (S–CH₃)',
+ P:'Side chain loops back and bonds to the N, making a ring. Breaks α-helices',
+ F:'CH₂ plus a benzene ring',
+ W:'CH₂ plus an indole (double ring with NH). The biggest side chain',
+ S:'CH₂–OH',
+ T:'Branched, with an OH and a CH₃',
+ C:'CH₂–SH (thiol). Forms disulfide bonds. Some charts call it nonpolar',
+ Y:'Benzene ring with an OH (phenol)',
+ N:'Amide: C=O with NH₂',
+ Q:'Like asparagine with one more CH₂',
+ K:'Four CH₂ then NH₃⁺',
+ R:'Guanidinium group, the most basic one',
+ H:'Imidazole ring. pKa ≈ 6, so it can be charged or neutral at body pH',
+ D:'Carboxylate (COO⁻) after one CH₂',
+ E:'Like aspartic acid with one more CH₂',
+};
+const TRICK={F:'"Fenylalanine"',W:'double ring looks like a W',Y:'"tYrosine"',K:'K comes right before L',R:'"aRginine"',D:'"asparDic"',E:'"gluEtamic"',N:'"asparagiNe"',Q:'"Q-tamine"'};
+const LEVELS={full:{name:'Full name',ex:'Phenylalanine',get:a=>a.n},three:{name:'3-letter code',ex:'Phe',get:a=>a.t},one:{name:'1-letter code',ex:'F',get:a=>a.o}};
+const PHASES={1:'Phase 1 · Trace the letters',2:'Phase 2 · Fill in the gaps',3:'Phase 3 · Solo, no hints'};
+
+/* ================= HELPERS ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const normTxt=x=>x.toLowerCase().replace(/[^a-z]/g,'');
+function loadBest(){try{return JSON.parse(localStorage.getItem('amino-best')||'{}')}catch(_){return {}}}
+function saveBest(k,v){try{const b=loadBest();if(!(k in b)||v>b[k]){b[k]=v;localStorage.setItem('amino-best',JSON.stringify(b))}}catch(_){}}
+function show(id){['home','study','play','results'].forEach(x=>$('#'+x).classList.toggle('hidden',x!==id));window.scrollTo(0,0);if(id==='home')buildHome()}
+function infoHTML(a){
+  const c=CATS[a.cat];
+  return `<span class="k">Names</span><span class="v">${a.n} · <em>${a.t}</em> · <em>${a.o}</em></span>
+  <span class="k">Type</span><span class="v"><i class="catdot" style="background:${c.col}"></i>${c.name}</span>
+  <span class="k">Side chain</span><span class="v">${NOTES[a.o]}</span>
+  ${TRICK[a.o]?`<span class="k">1-letter trick</span><span class="v">${a.o} = ${TRICK[a.o]}</span>`:''}`;
+}
+
+/* ================= HOME ================= */
+$('#legend').innerHTML=Object.values(CATS).map(c=>`<span><i class="catdot" style="background:${c.col}"></i>${c.short}</span>`).join('');
+function buildHome(){
+  const b=loadBest();
+  $('#typeLevels').innerHTML=Object.entries(LEVELS).map(([k,L])=>{
+    const bests=[1,2,3].map(p=>b[`type-${k}-${p}`]);
+    const top=bests.filter(x=>x!=null);
+    return `<div class="lvl"><b>${L.name}<small>${L.ex}${top.length?` <span class="best">· best ${Math.max(...top)}/20</span>`:''}</small></b>
+      <div class="ph">${[1,2,3].map(p=>`<button class="phb ${bests[p-1]!=null?'beat':''}" data-start="type:${k}:${p}" title="Phase ${p}">${p}</button>`).join('')}</div></div>`}).join('');
+  $('#pickLevels').innerHTML=Object.entries(LEVELS).map(([k,L])=>{
+    const v=b[`pick-${k}-0`];
+    return `<div class="lvl click" data-start="pick:${k}:0"><b>From the ${L.name.toLowerCase()}<small>"${L.get(AA[8])}" → pick it${v!=null?` <span class="best">· best ${v}/20</span>`:''}</small></b><span class="arrowb">→</span></div>`}).join('');
+}
+
+/* ================= STUDY ================= */
+function buildStudy(){
+  const g=$('#studyGal');
+  g.innerHTML=Object.entries(CATS).map(([ck,c])=>`<div class="famhead"><i class="catdot" style="background:${c.col};width:14px;height:14px"></i><h3>${c.name}</h3><small>${AA.filter(a=>a.cat===ck).length} amino acids</small></div>
+    <div class="gal">${AA.filter(a=>a.cat===ck).map(a=>`<button class="gi" data-aa="${a.o}">${structSVG(a)}<b>${a.n}</b><small>${a.t} · ${a.o}</small></button>`).join('')}</div>`).join('');
+  g.querySelectorAll('[data-aa]').forEach(el=>el.addEventListener('click',()=>openModal(AA.find(a=>a.o===el.dataset.aa))));
+}
+function openModal(a){$('#modalStruct').innerHTML=structSVG(a);$('#modalName').textContent=a.n;$('#modalInfo').innerHTML=infoHTML(a);$('#modal').classList.remove('hidden')}
+$('#modalClose').onclick=()=>$('#modal').classList.add('hidden');
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')$('#modal').classList.add('hidden')});
+
+/* ================= GAME ================= */
+let G=null;
+function startRound(mode,level,phase){
+  if(G)clearTimeout(G.timer);
+  G={mode,level,phase:+phase,key:`${mode}-${level}-${phase}`,deck:shuffle(AA.slice()),i:0,score:0,misses:[],timer:null,flipping:false};
+  const L=LEVELS[level];
+  $('#playTitle').innerHTML=mode==='type'?`Name the Structure<small>${L.name} · ${PHASES[G.phase]}</small>`:`Spot the Structure<small>From the ${L.name.toLowerCase()}</small>`;
+  show('play');renderQ();
+}
+function fb(html,cls){const f=$('#feedback');f.className='feedback '+(cls||'');f.innerHTML=html}
+
+function renderQ(){
+  const a=G.deck[G.i];
+  Object.assign(G,{a,mist:0,slotMiss:0,done:false,pos:0,hidden:new Set(),hintShown:new Set()});
+  clearTimeout(G.timer);
+  $('#prog').textContent=`${G.i+1} / ${G.deck.length}`;
+  $('#scoreNow').textContent=`✓ ${G.score}`;
+  $('#barFill').style.width=(G.i/G.deck.length*100)+'%';
+  const card=$('#card');
+  const tail=`<div class="feedback" id="feedback"></div><div class="info hidden" id="reveal"></div>
+    <div class="nextrow hidden" id="nextRow"><div class="timer"><i id="timerFill"></i></div><small>or press Enter</small><button class="gbtn" id="nextBtn">Next →</button></div>`;
+
+  if(G.mode==='type'){
+    card.classList.remove('single');
+    const tabs=Object.entries(LEVELS).map(([k,L])=>`<span class="${k===G.level?'on':''}">${L.name}</span>`).join('');
+    const target=LEVELS[G.level].get(a);
+    let answer;
+    if(G.phase<3){
+      answer=`<div class="typebox" id="typebox"><div class="slots" id="slots"></div>
+        <input id="ghost" class="ghostin" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Type the answer"></div>`;
+    }else{
+      answer=`<form id="f3" class="row" autocomplete="off"><input id="ans3" class="txt" placeholder="${LEVELS[G.level].name}…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button class="gbtn">Check</button></form>`;
+    }
+    const pr=G.phase===1?'Look at the structure, then <b>type the faded letters</b>.':G.phase===2?'Type the <b>whole answer</b>. Some letters are hidden. Miss one twice and it shows in pink.':`Type the <b>${LEVELS[G.level].name.toLowerCase()}</b>, then press Enter.`;
+    card.innerHTML=`<div class="paper">${structSVG(a)}</div><div class="side"><div class="tabs">${tabs}</div><div class="prompt">${pr}</div>${answer}${tail}</div>`;
+    if(G.phase<3){
+      G.chars=[...target];
+      if(G.phase===2){
+        const li=G.chars.map((ch,i)=>/[a-z]/i.test(ch)?i:-1).filter(i=>i>=0);
+        G.hidden=new Set(shuffle(li.slice()).slice(0,Math.max(1,Math.round(li.length*0.5))));
+      }
+      skipFixed();renderSlots();
+      const gi=$('#ghost');
+      gi.addEventListener('input',()=>{const v=gi.value;gi.value='';for(const ch of v)onKey(ch)});
+      gi.addEventListener('focus',()=>$('#typebox').classList.add('focus'));
+      gi.addEventListener('blur',()=>{const tb=$('#typebox');if(tb)tb.classList.remove('focus')});
+      setTimeout(()=>gi.focus({preventScroll:true}),30);
+    }else{
+      $('#f3').addEventListener('submit',e=>{e.preventDefault();checkSolo()});
+      setTimeout(()=>$('#ans3').focus({preventScroll:true}),30);
+    }
+  }else{
+    card.classList.add('single');
+    // distractors: up to 2 from same category, rest random
+    const same=shuffle(AA.filter(x=>x!==a&&x.cat===a.cat)).slice(0,2);
+    const rest=shuffle(AA.filter(x=>x!==a&&!same.includes(x))).slice(0,3-same.length);
+    G.opts=shuffle([a,...same,...rest]);
+    card.innerHTML=`<div><div class="ask"><div class="k">Which one is</div><div class="v">${esc(LEVELS[G.level].get(a))}</div></div>
+      <div class="opts">${G.opts.map((x,i)=>`<button class="opt" data-i="${i}"><kbd>${i+1}</kbd>${structSVG(x,{hl:'#E6AFFC'})}</button>`).join('')}</div>
+      <div class="pickfoot">${tail}</div></div>`;
+    card.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>pick(+b.dataset.i)));
+  }
+  $('#nextBtn').addEventListener('click',next);
+}
+
+/* typing, phase 1 & 2 */
+function skipFixed(){while(G.pos<G.chars.length&&!/[a-z]/i.test(G.chars[G.pos]))G.pos++}
+function renderSlots(){
+  let html='',word='';
+  G.chars.forEach((ch,i)=>{
+    if(ch===' '){html+=`<span class="word">${word}</span><span class="gap"></span>`;word='';return}
+    let cls='slot';
+    if(i<G.pos)cls+=' done';
+    else{
+      if(G.hintShown.has(i))cls+=' hint';
+      else if(G.phase===2&&G.hidden.has(i))cls+=' blank';
+      if(i===G.pos&&!G.done)cls+=' cur';
+    }
+    word+=`<span class="${cls}">${esc(ch)}</span>`;
+  });
+  html+=`<span class="word">${word}</span>`;
+  $('#slots').innerHTML=html;
+}
+function shake(el){if(!el)return;el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
+function onKey(ch){
+  if(!G||G.done||G.mode!=='type'||G.phase===3)return;
+  if(!/^[a-z]$/i.test(ch))return;
+  const exp=G.chars[G.pos];
+  if(ch.toLowerCase()===exp.toLowerCase()){
+    G.pos++;G.slotMiss=0;skipFixed();renderSlots();fb('','');
+    if(G.pos>=G.chars.length)finishTyped();
+  }else{
+    G.mist++;G.slotMiss++;
+    if(G.phase===2&&G.slotMiss>=2)G.hintShown.add(G.pos);
+    renderSlots();shake($('#typebox'));
+    fb(`Not “${esc(ch)}”. Try again.`,'bad');
+  }
+}
+function finishTyped(){
+  G.done=true;const tb=document.getElementById('typebox');if(tb)tb.classList.add('finished');
+  const perfect=G.mist===0;
+  if(perfect)G.score++;else G.misses.push({a:G.a,why:`${G.mist} wrong key${G.mist>1?'s':''}`});
+  fb(perfect?'Perfect! ✓':`Got it, with ${G.mist} slip${G.mist>1?'s':''}`,perfect?'good':'info');
+  afterAnswer(perfect);
+}
+/* phase 3 */
+function checkSolo(){
+  if(G.done)return;
+  const v=$('#ans3').value.trim();if(!v){shake($('#ans3'));return}
+  G.done=true;$('#ans3').disabled=true;
+  const target=LEVELS[G.level].get(G.a);
+  const ok=normTxt(v)===normTxt(target);
+  if(ok){G.score++;fb('Correct! ✓','good')}
+  else{G.misses.push({a:G.a,why:`you typed “${esc(v)}”`});fb(`✗ Not quite. The answer is<span class="ans">${target}</span>`,'bad')}
+  afterAnswer(ok);
+}
+/* game 2 */
+function pick(i){
+  if(G.done)return;G.done=true;
+  const a=G.a,ok=G.opts[i]===a;
+  document.querySelectorAll('.opt').forEach((b,k)=>{
+    const x=G.opts[k];
+    if(x===a)b.classList.add('right');else if(k===i)b.classList.add('wrong');else b.classList.add('dim');
+    b.insertAdjacentHTML('beforeend',`<div class="badge">${x.n} · ${x.o}</div>`);
+  });
+  if(ok){G.score++;fb('Correct! ✓','good')}
+  else{G.misses.push({a,why:`you picked ${G.opts[i].n}`});fb(`✗ You picked ${G.opts[i].n}. The green one is ${a.n}.`,'bad')}
+  afterAnswer(ok);
+}
+
+function afterAnswer(ok){
+  $('#scoreNow').textContent=`✓ ${G.score}`;
+  $('#reveal').innerHTML=infoHTML(G.a);$('#reveal').classList.remove('hidden');
+  $('#nextRow').classList.remove('hidden');
+  const ms=ok?1700:4800,tf=$('#timerFill');
+  tf.style.transition='none';tf.style.width='100%';void tf.offsetWidth;
+  tf.style.transition=`width ${ms}ms linear`;tf.style.width='0%';
+  G.timer=setTimeout(next,ms);
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+}
+function next(){
+  if(!G||G.flipping||!G.done)return;
+  clearTimeout(G.timer);
+  G.i++;
+  if(G.i>=G.deck.length){showResults();return}
+  const c=$('#card');G.flipping=true;
+  c.classList.add('flip-out');
+  setTimeout(()=>{
+    if(!G)return;
+    renderQ();
+    c.classList.remove('flip-out');c.classList.add('flip-in');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{c.classList.remove('flip-in');setTimeout(()=>{if(G)G.flipping=false},280)}));
+  },270);
+}
+
+function showResults(){
+  const tot=G.deck.length,sc=G.score,pct=Math.round(sc/tot*100);
+  saveBest(G.key,sc);
+  const stars=sc>=19?'⭐⭐⭐':sc>=15?'⭐⭐☆':sc>=10?'⭐☆☆':'☆☆☆';
+  const msg=sc===tot?'Flawless. You know all 20.':sc>=16?'Really solid. Go over the ones below.':sc>=10?'Getting there. One more run will help a lot.':'Good start. Run it again, it sticks fast.';
+  const order=['full','three','one'];
+  let nb='';
+  if(G.mode==='type'){
+    if(G.phase<3)nb=`<button class="gbtn" data-start="type:${G.level}:${G.phase+1}">Go to Phase ${G.phase+1} →</button>`;
+    else{const ni=order.indexOf(G.level)+1;nb=ni<3?`<button class="gbtn" data-start="type:${order[ni]}:1">Next: ${LEVELS[order[ni]].name} →</button>`:`<button class="gbtn" data-start="pick:full:0">Try Spot the Structure →</button>`}
+  }else{const ni=order.indexOf(G.level)+1;if(ni<3)nb=`<button class="gbtn" data-start="pick:${order[ni]}:0">Next: from the ${LEVELS[order[ni]].name.toLowerCase()} →</button>`}
+  const note=G.mode==='type'&&G.phase<3?'<p style="color:var(--muted);font-size:13px;margin:6px 0 0">A point counts only if you typed it with zero wrong keys.</p>':'';
+  const title=$('#playTitle').innerHTML.replace('<small>',' · ').replace('</small>','');
+  $('#resultsBox').innerHTML=`<span class="chip">Round complete</span>
+    <div style="color:var(--muted);font-weight:600;margin-top:10px">${title}</div>
+    <div class="bigscore">${sc} / ${tot}</div>
+    <div class="stars">${stars}</div>
+    <div style="font:800 20px Fraunces,Georgia,serif">${pct}% · ${msg}</div>${note}
+    ${G.misses.length?`<div style="color:var(--gold);font:800 13px Fraunces,Georgia,serif;letter-spacing:.14em;margin-top:22px">REVIEW THESE</div>
+    <div class="misslist">${G.misses.map(m=>`<div class="miss">${structSVG(m.a)}<b>${m.a.n} · ${m.a.t} · ${m.a.o}</b><span>${m.why}</span></div>`).join('')}</div>`:''}
+    <div class="resbtns"><button class="gbtn ghost" data-start="${G.mode}:${G.level}:${G.phase}">↻ Play again</button>${nb}<button class="gbtn ghost" data-go="home">Home</button></div>`;
+  show('results');
+}
+
+/* ================= GLOBAL EVENTS ================= */
+document.addEventListener('click',e=>{
+  const st=e.target.closest('[data-start]');
+  if(st){const [m,l,p]=st.dataset.start.split(':');startRound(m,l,p);return}
+  const go=e.target.closest('[data-go]');
+  if(go){if(G)clearTimeout(G.timer);G=null;show(go.dataset.go);return}
+  if(G&&G.mode==='type'&&G.phase<3&&!G.done&&!$('#play').classList.contains('hidden')&&!e.target.closest('button')){
+    const gi=$('#ghost');if(gi)gi.focus({preventScroll:true});
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(!$('#modal').classList.contains('hidden')&&e.key==='Escape'){$('#modal').classList.add('hidden');return}
+  if(!G||$('#play').classList.contains('hidden'))return;
+  if(e.key==='Enter'&&G.done){e.preventDefault();next();return}
+  if(G.mode==='pick'&&!G.done&&/^[1-4]$/.test(e.key)){pick(+e.key-1);return}
+  if(G.mode==='type'&&G.phase<3&&!G.done&&e.target.id!=='ghost'&&e.key.length===1&&!e.metaKey&&!e.ctrlKey){
+    e.preventDefault();onKey(e.key);const gi=$('#ghost');if(gi)gi.focus({preventScroll:true});
+  }
+});
+
+buildHome();buildStudy();
+</script>
+</body></html>
